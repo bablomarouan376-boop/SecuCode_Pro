@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>SecuCode - كاشف الروابط المشبوهة</title>
+    
+    <style>
+        /* التنسيق: تصميم احترافي بسيط */
+        body {font-family: 'Tahoma', sans-serif;margin: 0;padding: 0;background-color: #f0f4f8;text-align: right;direction: rtl;display: flex;justify-content: center;align-items: center;min-height: 100vh;}
+        .container {width: 90%;max-width: 600px;background-color: #ffffff;padding: 40px;border-radius: 12px;box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);border-top: 5px solid #007bff;}
+        h1 {color: #007bff;text-align: center;margin-bottom: 30px;font-size: 1.8em;}
+        input[type="url"] {width: 100%;padding: 12px 15px;margin-bottom: 20px;border: 2px solid #ccc;border-radius: 8px;box-sizing: border-box;font-size: 1em;transition: border-color 0.3s;}
+        input[type="url"]:focus {border-color: #007bff;outline: none;}
+        button {width: 100%;background-color: #007bff;color: white;padding: 12px;border: none;border-radius: 8px;cursor: pointer;font-size: 1.1em;transition: background-color 0.3s, transform 0.1s;}
+        button:hover {background-color: #0056b3;}
+        button:active {transform: scale(0.98);}
+        #result {margin-top: 30px;padding: 20px;border-radius: 8px;text-align: center;font-weight: bold;font-size: 1.2em;color: #333;min-height: 60px;display: flex;justify-content: center;align-items: center;transition: background-color 0.4s;}
+        /* تنسيقات النتائج */
+        .result-safe { background-color: #d4edda; color: #155724; border: 1px solid #c3e6cb; } 
+        .result-medium { background-color: #fff3cd; color: #856404; border: 1px solid #ffeeba; } 
+        .result-high { background-color: #f8d7da; color: #721c24; border: 1px solid #f5c6cb; } 
+        .result-loading { background-color: #e9ecef; color: #495057; border: 1px solid #ced4da; } 
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 SecuCode - فاحص الروابط</h1>
+        <p>أدخل الرابط الذي تشك به لمعرفة ما إذا كان موقع احتيال (Phishing) أم لا:</p>
+        
+        <input type="url" id="linkInput" placeholder="أدخل الرابط هنا (مثال: https://suspect.com)" required>
+        <button onclick="checkLink()">افحص الرابط</button>
+
+        <div id="result">النتائج ستظهر هنا...</div>
+    </div>
+
+    <script>
+        async function checkLink() {
+            const link = document.getElementById('linkInput').value;
+            const resultDiv = document.getElementById('result');
+            
+            resultDiv.className = 'result-loading';
+            resultDiv.innerHTML = "جاري التحليل... (يتم فحص 7 قواعد أمنية)";
+
+            if (!link) {
+                resultDiv.className = 'result-high';
+                resultDiv.innerHTML = "❌ الرجاء إدخال رابط صالح.";
+                return;
+            }
+
+            try {
+                // !!! ملاحظة مهمة: سيتم استبدال هذا العنوان برابط Render العام !!!
+                // حالياً هو يستخدم العنوان المحلي الافتراضي للاختبار
+                const apiUrl = 'http://127.0.0.1:5000/check_link'; 
+                
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ link: link })
+                });
+
+                const data = await response.json();
+                resultDiv.className = ''; 
+
+                if (data.error) {
+                    resultDiv.className = 'result-high';
+                    resultDiv.innerHTML = `خطأ في الخادم: ${data.error}`;
+                } else {
+                    let resultClass = '';
+                    if (data.certainty === 'High') {
+                        resultClass = 'result-high';
+                    } else if (data.certainty === 'Medium') {
+                        resultClass = 'result-medium';
+                    } else {
+                        resultClass = 'result-safe';
+                    }
+                    
+                    resultDiv.className = resultClass;
+                    resultDiv.innerHTML = `نتيجة التحليل: <strong>${data.result}</strong><br>(نقاط الشك: ${data.score} نقطة)`;
+                }
+
+            } catch (error) {
+                console.error('Fetch Error:', error);
+                resultDiv.className = 'result-high';
+                resultDiv.innerHTML = "❌ خطأ في الاتصال بالخادم. تأكد من أن API Flask يعمل.";
+            }
+        }
+    </script>
+</body>
+</html>
