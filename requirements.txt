@@ -1,12 +1,4 @@
+# requirements.txt
 Flask
-
-
 requests
-
-
 validators
-
-
-gunicorn
-
-
