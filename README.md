@@ -29,7 +29,7 @@ SecuCode Pro هو منصة أمنية احترافية تم تطويرها بو�
 🚀 دليل التثبيت والتشغيل (Deployment Guide)
 يمكنك تشغيل المشروع محلياً باتباع الخطوات التالية:
 # استنساخ المشروع من المستودع
-git clone [https://github.com/tarekmostafa/SecuCode-Pro.git](https://github.com/tarekmostafa/SecuCode-Pro.git)
+git clone https://github.com/bablomarouan376-boop/SecuCode_Pro.git
 
 # الانتقال للمجلد الرئيسي
 cd SecuCode-Pro
