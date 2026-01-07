@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+رابط خريطة الموقع لتسهيل المهمة على جوجل
+Sitemap: https://www.google.com/search?q=https://secucode-pro.vercel.app/sitemap.xml
