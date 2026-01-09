@@ -2,161 +2,128 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
-    <meta name="google-site-verification" content="uDTeyJLiPOO2rCMKm7-iONhBtRgRF7qv1NP9jhCRK2A" />
-
-    <title>SecuCode Pro | الرادار الأمني المتقدم - طارق مصطفى</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SecuCode Pro | الرادار الأمني</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #3b82f6; --bg-dark: #020617; }
-        body { font-family: 'Cairo', sans-serif; background: var(--bg-dark); color: #f8fafc; overflow-x: hidden; }
-        .cyber-card { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(56, 189, 248, 0.1); }
-        
-        /* تأثيرات التحميل والخريطة */
-        .node { position: relative; padding: 10px 20px; background: #1e293b; border-radius: 12px; border-right: 4px solid #3b82f6; }
-        .node::after { content: '↓'; position: absolute; bottom: -25px; left: 50%; transform: translateX(-50%); color: #475569; font-weight: bold; }
-        .node:last-child::after { content: ''; }
-
-        .risk-Critical { border-right: 6px solid #ef4444; }
-        .risk-High { border-right: 6px solid #f97316; }
-        .risk-Medium { border-right: 6px solid #eab308; }
-        .risk-Low { border-right: 6px solid #22c55e; }
+        body { font-family: 'Cairo', sans-serif; background: #020617; color: white; }
+        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.05); }
+        .node-line { position: relative; }
+        .node-line::before { content: ''; position: absolute; left: 50%; top: 100%; height: 20px; width: 2px; background: #1e293b; }
+        .node-line:last-child::before { display: none; }
     </style>
 </head>
-<body class="min-h-screen flex flex-col items-center pb-20">
+<body class="min-h-screen p-4 md:p-10">
 
-    <header class="w-full max-w-4xl text-center pt-16 pb-12 px-4">
-        <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold mb-8 animate-pulse uppercase tracking-widest">
-            Neural Security Engine v2.5
-        </div>
-        <h1 class="text-6xl md:text-8xl font-black mb-6 tracking-tighter bg-clip-text text-transparent bg-gradient-to-b from-white to-blue-500">
-            SecuCode Pro
-        </h1>
-        <p class="text-slate-400 text-lg md:text-xl font-medium">
-            تطوير المهندس: <span class="text-blue-400 font-bold">طارق مصطفى</span>
-        </p>
-    </header>
+    <div class="max-w-4xl mx-auto">
+        <header class="text-center mb-12">
+            <h1 class="text-5xl md:text-7xl font-black mb-4 bg-gradient-to-b from-white to-blue-500 bg-clip-text text-transparent">SecuCode Pro</h1>
+            <p class="text-slate-400">نظام التحليل السلوكي المتقدم | تطوير: طارق مصطفى</p>
+        </header>
 
-    <main class="w-full max-w-3xl px-4">
-        <!-- Input Section -->
-        <div class="cyber-card rounded-[2.5rem] p-8 md:p-12 mb-10 shadow-2xl transition-all hover:border-blue-500/30">
-            <label class="block text-[10px] font-black text-slate-500 mb-4 uppercase tracking-[0.3em] mr-2">أدخل الرابط للفحص العميق</label>
-            <div class="relative mb-6">
-                <input type="url" id="urlInput" placeholder="https://example.com" 
-                       class="w-full bg-slate-900/50 border-2 border-slate-800 rounded-2xl py-5 px-6 text-white focus:border-blue-500 outline-none transition-all text-xl">
+        <div class="glass p-6 md:p-10 rounded-[2rem] shadow-2xl mb-10">
+            <div class="flex flex-col md:flex-row gap-4">
+                <input type="text" id="urlInput" placeholder="أدخل الرابط المراد فحصه..." 
+                       class="flex-1 bg-slate-900 border border-slate-800 rounded-2xl px-6 py-4 text-white outline-none focus:border-blue-500 transition-all">
+                <button onclick="startScan()" id="btn" class="bg-blue-600 hover:bg-blue-500 px-10 py-4 rounded-2xl font-black transition-all flex items-center justify-center gap-2">
+                    <i data-lucide="shield-check"></i> فحص شامل
+                </button>
             </div>
-            <button onclick="startScan()" id="scanBtn" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-black text-xl py-5 rounded-2xl flex items-center justify-center gap-4 transition-all shadow-lg shadow-blue-600/20">
-                <span>ابدأ الرادار الأمني</span>
-                <i data-lucide="radar" class="w-6 h-6"></i>
-            </button>
         </div>
 
-        <!-- Result Section -->
-        <div id="resultArea" class="hidden space-y-8 animate-in fade-in slide-in-from-bottom-10 duration-700">
-            
-            <!-- Summary Card -->
-            <div id="statusCard" class="cyber-card rounded-3xl p-8 flex flex-col md:flex-row justify-between items-center gap-6">
-                <div class="text-center md:text-right">
-                    <p class="text-[10px] text-slate-500 font-bold uppercase mb-2">Verdict / النتيجة</p>
-                    <h2 id="riskLabel" class="text-5xl font-black italic tracking-tighter">--</h2>
+        <div id="results" class="hidden space-y-6">
+            <!-- العداد الرئيسي -->
+            <div id="mainCard" class="glass p-8 rounded-[2rem] flex flex-col md:flex-row items-center justify-between gap-6 border-r-8">
+                <div>
+                    <span class="text-xs font-bold text-slate-500 uppercase tracking-widest">حالة الأمان النهائية</span>
+                    <h2 id="riskStatus" class="text-4xl font-black mt-1">--</h2>
                 </div>
                 <div class="text-center">
-                    <div id="scoreText" class="text-6xl font-black text-blue-400">0</div>
-                    <p class="text-[10px] text-slate-500 font-bold uppercase">Security Score</p>
+                    <div id="riskScore" class="text-6xl font-black text-blue-500">0</div>
+                    <span class="text-xs font-bold text-slate-500 uppercase">معدل الخطورة</span>
                 </div>
             </div>
 
-            <!-- Redirection Map (الخريطة المرئية) -->
-            <div class="cyber-card rounded-3xl p-8">
-                <h3 class="text-sm font-bold text-blue-400 mb-6 flex items-center gap-2">
-                    <i data-lucide="map-pin" class="w-4 h-4"></i> خريطة تحويلات الرابط
+            <!-- خريطة التحويلات -->
+            <div class="glass p-8 rounded-[2rem]">
+                <h3 class="font-bold mb-6 flex items-center gap-2 text-blue-400">
+                    <i data-lucide="git-branch" class="w-5 h-5"></i> مسار القفزات والتحويلات
                 </h3>
-                <div id="redirectMap" class="flex flex-col gap-8 items-center md:items-start overflow-x-auto py-4">
-                    <!-- النقاط تضاف هنا برمجياً -->
-                </div>
+                <div id="redirectPath" class="space-y-4"></div>
             </div>
 
-            <!-- Violations -->
-            <div id="violationsList" class="grid gap-4"></div>
+            <!-- قائمة الانتهاكات -->
+            <div id="violations" class="grid gap-4"></div>
         </div>
-    </main>
+    </div>
 
     <script>
         lucide.createIcons();
 
         async function startScan() {
             const input = document.getElementById('urlInput');
-            const btn = document.getElementById('scanBtn');
-            const resultArea = document.getElementById('resultArea');
-            let link = input.value.trim();
-            if(!link) return;
+            const btn = document.getElementById('btn');
+            const results = document.getElementById('results');
+            if(!input.value.trim()) return;
 
             btn.disabled = true;
-            btn.innerHTML = `جاري التحليل العميق...`;
-            resultArea.classList.add('hidden');
+            btn.innerHTML = "جاري التحليل السلوكي...";
+            results.classList.add('hidden');
 
             try {
                 const res = await fetch('/analyze', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({link})
+                    body: JSON.stringify({link: input.value})
                 });
                 const data = await res.json();
-                renderResults(data);
-            } catch (err) {
-                alert("تعذر الاتصال بالمحرك الأمني.");
+                showResults(data);
+            } catch (e) {
+                alert("خطأ في الاتصال بالسيرفر");
             } finally {
                 btn.disabled = false;
-                btn.innerHTML = `<span>ابدأ الرادار الأمني</span> <i data-lucide="radar"></i>`;
+                btn.innerHTML = `<i data-lucide="shield-check"></i> فحص شامل`;
                 lucide.createIcons();
             }
         }
 
-        function renderResults(data) {
-            const area = document.getElementById('resultArea');
-            area.classList.remove('hidden');
+        function showResults(data) {
+            results.classList.remove('hidden');
+            const mainCard = document.getElementById('mainCard');
+            const riskStatus = document.getElementById('riskStatus');
+            const riskScore = document.getElementById('riskScore');
             
-            // 1. Status Card
-            const card = document.getElementById('statusCard');
-            card.className = `cyber-card rounded-3xl p-8 flex flex-col md:flex-row justify-between items-center gap-6 risk-${data.risk_score}`;
-            document.getElementById('riskLabel').textContent = translateRisk(data.risk_score);
-            document.getElementById('scoreText').textContent = data.suspicious_points;
+            // تحديث الألوان
+            const colors = {
+                'Low': '#22c55e', 'Medium': '#eab308', 'High': '#f97316', 'Critical': '#ef4444', 'Unknown': '#64748b'
+            };
+            const color = colors[data.risk_score];
+            mainCard.style.borderColor = color;
+            riskStatus.style.color = color;
+            riskStatus.textContent = data.risk_score === 'Low' ? 'آمن وموثوق' : (data.risk_score === 'Critical' ? 'خطر حرج' : data.risk_score);
+            riskScore.textContent = data.suspicious_points;
 
-            // 2. Redirection Map (Visual Nodes)
-            const map = document.getElementById('redirectMap');
-            map.innerHTML = '';
-            data.redirect_path.forEach((url, index) => {
-                const node = document.createElement('div');
-                node.className = 'node w-full md:w-auto break-all text-xs font-mono text-slate-400';
-                node.innerHTML = `<span class="text-blue-500 mr-2">[${index + 1}]</span> ${url}`;
-                map.appendChild(node);
-            });
+            // خريطة التحويلات
+            const pathDiv = document.getElementById('redirectPath');
+            pathDiv.innerHTML = data.redirects.map((url, i) => `
+                <div class="node-line flex items-center gap-4 bg-slate-900/50 p-3 rounded-xl border border-slate-800">
+                    <span class="text-blue-500 font-bold">#${i+1}</span>
+                    <span class="text-xs truncate text-slate-400">${url}</span>
+                </div>
+            `).join('');
 
-            // 3. Violations List
-            const vList = document.getElementById('violationsList');
-            vList.innerHTML = '';
-            if(data.violated_rules.length === 0) {
-                vList.innerHTML = `<div class="p-10 text-center bg-green-500/5 rounded-3xl border border-green-500/20 text-green-400 font-bold">هذا الرابط اجتاز جميع اختبارات الأمان العميقة بنجاح</div>`;
-            } else {
-                data.violated_rules.forEach(rule => {
-                    vList.innerHTML += `
-                        <div class="cyber-card p-6 rounded-2xl border-r-4 border-red-500 transition-transform hover:scale-[1.01]">
-                            <h4 class="text-red-400 font-black text-lg mb-1">${rule.name}</h4>
-                            <p class="text-slate-400 text-sm leading-relaxed">${rule.risk_description}</p>
-                        </div>
-                    `;
-                });
-            }
-            
+            // الانتهاكات
+            const vDiv = document.getElementById('violations');
+            vDiv.innerHTML = data.violations.length ? data.violations.map(v => `
+                <div class="glass p-5 rounded-2xl border-r-4 border-red-500 animate-pulse">
+                    <h4 class="font-bold text-red-400">${v.name}</h4>
+                    <p class="text-sm text-slate-400">${v.desc}</p>
+                </div>
+            `).join('') : `<div class="p-6 text-center text-green-500 font-bold bg-green-500/5 rounded-2xl border border-green-500/20">لم يتم رصد أي سلوك مريب في هذا الرابط</div>`;
+
             lucide.createIcons();
-            window.scrollTo({ top: area.offsetTop - 50, behavior: 'smooth' });
-        }
-
-        function translateRisk(label) {
-            return {'Critical': 'خطر حرج جداً', 'High': 'تهديد مرتفع', 'Medium': 'اشتباه متوسط', 'Low': 'آمن وموثوق'}[label] || label;
         }
     </script>
 </body>
