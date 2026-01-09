@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Updated for 2026 - SecuCode Pro -->
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url>
+<!-- Created by SecuCode Pro Engine - Tarek Mostafa -->
+<urlset xmlns="[تم إزالة الرابط المشبوه]"
+xmlns:xsi="https://www.google.com/search?q=http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="[تم إزالة الرابط المشبوه]
+[تم إزالة الرابط المشبوه]">
+<!-- الصفحة الرئيسية للموقع -->
+<url>
     <loc>https://secu-code-pro.vercel.app/</loc>
     <lastmod>2026-01-09</lastmod>
-    <changefreq>weekly</changefreq>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
-  </url>
-</urlset>
+</url>
 
+<!-- في حالة إضافة صفحات مستقبلية مثل "عن المطور" أو "الخصوصية" يمكن إضافتها هنا -->
+
+</urlset>
