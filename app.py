@@ -4,13 +4,29 @@ import requests
 import json
 import base64
 import time
-from flask import Flask, request, jsonify, render_template
+from flask import Flask, request, jsonify, render_template, send_from_directory, make_response
 from urllib.parse import urlparse, urljoin
 from validators import url as validate_url
 
-app = Flask(__name__)
+# إعداد التطبيق مع تحديد مجلد الملفات الثابتة
+app = Flask(__name__, static_folder='static')
 
-# إعدادات متقدمة للمحرك
+# --- إضافة مسارات الأرشفة (Sitemap & Robots) ---
+@app.route('/sitemap.xml')
+def sitemap():
+    try:
+        # إرسال الملف مع تحديد النوع كـ XML لضمان قبول جوجل له
+        response = make_response(send_from_directory(app.static_folder, 'sitemap.xml'))
+        response.headers['Content-Type'] = 'application/xml'
+        return response
+    except Exception as e:
+        return str(e), 404
+
+@app.route('/robots.txt')
+def robots():
+    return send_from_directory(app.static_folder, 'robots.txt')
+
+# --- إعدادات المحرك (كما هي بدون تغيير) ---
 SENSITIVE_PATTERNS = {
     "Credential Harvesting": r'(?i)(password|passwd|signin|login|credential|verification)',
     "Browser Exploitation": r'(?i)(eval\(|unescape\(|document\.write\(|setTimeout\(|setInterval\()',
@@ -18,7 +34,6 @@ SENSITIVE_PATTERNS = {
     "Privacy Violation": r'(?i)(navigator\.mediaDevices|getUserMedia|geolocation|cookie|localStorage)'
 }
 
-# قائمة بيضاء ذكية تعتمد على الدومين الأساسي فقط
 WHITELIST_DOMAINS = [
     'google.com', 'google.com.eg', 'facebook.com', 'youtube.com', 'twitter.com', 
     'x.com', 'instagram.com', 'linkedin.com', 'microsoft.com', 'apple.com', 
@@ -31,14 +46,11 @@ def is_trusted(url):
 
 def recursive_js_analysis(html, base_url):
     """تحليل السكربتات بعمق دون الوقوع في فخ النتائج الخاطئة"""
-    findings = []
     scripts = re.findall(r'<script.*?src=["\'](.*?)["\']', html, re.I)
     inline_scripts = re.findall(r'<script>(.*?)</script>', html, re.S | re.I)
     
-    # فحص الأكواد الداخلية أولاً
     all_js = "\n".join(inline_scripts)
     
-    # فحص الأكواد الخارجية (بحد أقصى 3 سكربتات لتجنب البطء)
     for s_url in scripts[:3]:
         try:
             full_s_url = urljoin(base_url, s_url)
@@ -47,7 +59,6 @@ def recursive_js_analysis(html, base_url):
                 all_js += "\n" + r.text
         except: continue
 
-    # فحص الـ Base64 Auto-Decoder
     b64_matches = re.findall(r'["\']([A-Za-z0-9+/]{50,})={0,2}["\']', all_js)
     for b in b64_matches:
         try:
@@ -69,35 +80,28 @@ def perform_deep_scan(url):
     }
 
     try:
-        # 1. تتبع التحويلات (Redirection Tracking)
         session = requests.Session()
         response = session.get(url, timeout=10, headers={"User-Agent": "Mozilla/5.0"}, allow_redirects=True)
         results["final_url"] = response.url
         results["redirects"] = [r.url for r in response.history] + [response.url]
         
-        # 2. استثناء المواقع الموثوقة من فحص المحتوى (لتجنب الـ False Positives)
         if is_trusted(results["final_url"]):
             results["analysis_time"] = round(time.time() - start_time, 2)
             return results
 
-        # 3. التحليل السلوكي للمحتوى (Behavioral Analysis)
         html_content = response.text
         js_content = recursive_js_analysis(html_content, results["final_url"])
         full_payload = (html_content + js_content).lower()
 
-        # فحص البروتوكول
         if not results["final_url"].startswith('https'):
             results["points"] += 45
             results["violations"].append({"name": "Unencrypted Connection", "desc": "الموقع يفتقر لتشفير SSL."})
 
-        # فحص الأنماط (Pattern Matching) مع وزن نسبي
         for threat, pattern in SENSITIVE_PATTERNS.items():
             if re.search(pattern, full_payload):
-                # لا نحسب النقاط إلا لو كانت مريبة (مثلاً: طلب باسورد في موقع غير مشهور)
                 results["points"] += 25
                 results["violations"].append({"name": f"Suspicious {threat}", "desc": f"تم رصد كود يحاول الوصول إلى ({threat})."})
 
-        # كشف انتحال العلامات التجارية (Typosquatting)
         domain = urlparse(results["final_url"]).netloc.lower()
         brands = ['google', 'facebook', 'paypal', 'bank', 'secure']
         for b in brands:
@@ -109,7 +113,6 @@ def perform_deep_scan(url):
         results["risk_score"] = "Unknown"
         results["violations"].append({"name": "Scan Blocked", "desc": "الموقع يحظر أدوات التحليل أو غير متاح حالياً."})
 
-    # النتيجة النهائية (Logic Gate)
     score = min(results["points"], 100)
     results["points"] = score
     if score >= 80: results["risk_score"] = "Critical"
