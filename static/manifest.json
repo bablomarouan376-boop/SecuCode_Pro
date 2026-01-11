@@ -1,19 +1,26 @@
 {
   "short_name": "SecuCode",
-  "name": "SecuCode Pro - Tarek Mostafa",
-  "description": "أداة طارق مصطفى لفحص أمان الروابط والتحليل السلوكي.",
+  "name": "SecuCode Pro | طارق مصطفى",
+  "description": "أداة طارق مصطفى المتطورة لفحص أمان الروابط والتحليل السلوكي.",
+  "lang": "ar-SA",
+  "dir": "rtl",
   "icons": [
     {
       "src": "https://img.freepik.com/premium-vector/low-poly-shield-with-checkmark-cybersecurity-concept-digital-protection-blue-geometric-3d-design_145776-164385.jpg",
       "type": "image/jpg",
-      "sizes": "512x512"
+      "sizes": "192x192",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://img.freepik.com/premium-vector/low-poly-shield-with-checkmark-cybersecurity-concept-digital-protection-blue-geometric-3d-design_145776-164385.jpg",
+      "type": "image/jpg",
+      "sizes": "512x512",
+      "purpose": "any"
     }
   ],
   "start_url": "/",
-  "background_color": "#020617",
   "display": "standalone",
-  "theme_color": "#3b82f6",
-  "lang": "ar-SA",
-  "dir": "rtl"
+  "orientation": "portrait",
+  "background_color": "#020617",
+  "theme_color": "#3b82f6"
 }
-
