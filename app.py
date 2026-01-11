@@ -17,7 +17,8 @@ STATS = {
 # القائمة السوداء: ضع الروابط التي تريد حظرها فوراً هنا
 BLACKLIST = [
     'malicious-example.com', 
-    'hack-link.net'
+    'hack-link.net',
+    'zbadzm.sparkasse.lol',
 ]
 
 # القائمة البيضاء: المواقع العالمية الموثوقة
