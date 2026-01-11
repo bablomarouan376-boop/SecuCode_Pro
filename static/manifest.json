@@ -1,26 +1,32 @@
 {
+  "name": "SecuCode Pro | Tarek Mostafa",
   "short_name": "SecuCode",
-  "name": "SecuCode Pro | طارق مصطفى",
-  "description": "أداة طارق مصطفى المتطورة لفحص أمان الروابط والتحليل السلوكي.",
-  "lang": "ar-SA",
-  "dir": "rtl",
+  "description": "نظام طارق مصطفى المتطور لفحص أمان الروابط والتحليل الأمني الذكي.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#020617",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "https://img.freepik.com/premium-vector/low-poly-shield-with-checkmark-cybersecurity-concept-digital-protection-blue-geometric-3d-design_145776-164385.jpg",
-      "type": "image/jpg",
       "sizes": "192x192",
+      "type": "image/jpg",
       "purpose": "any maskable"
     },
     {
       "src": "https://img.freepik.com/premium-vector/low-poly-shield-with-checkmark-cybersecurity-concept-digital-protection-blue-geometric-3d-design_145776-164385.jpg",
-      "type": "image/jpg",
       "sizes": "512x512",
-      "purpose": "any"
+      "type": "image/jpg",
+      "purpose": "any maskable"
     }
   ],
-  "start_url": "/",
-  "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#020617",
-  "theme_color": "#3b82f6"
+  "categories": ["security", "utilities"],
+  "screenshots": [
+    {
+      "src": "https://img.freepik.com/premium-vector/low-poly-shield-with-checkmark-cybersecurity-concept-digital-protection-blue-geometric-3d-design_145776-164385.jpg",
+      "sizes": "1280x720",
+      "type": "image/jpg"
+    }
+  ]
 }
