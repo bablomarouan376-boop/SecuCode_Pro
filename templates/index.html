@@ -4,16 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    <!-- 1. الكلمات المفتاحية والأرشفة (SEO & Keywords) -->
     <title>SecuCode Pro | طارق مصطفى - فحص أمان الروابط المتطور</title>
     <meta name="description" content="SecuCode Pro هو نظام فحص روابط متطور مطور بواسطة طارق مصطفى لكشف الاحتيال، البرمجيات الخبيثة، والتحويلات المريبة. احمِ نفسك الآن مجاناً.">
     <meta name="keywords" content="فحص روابط, طارق مصطفى, Tarek Mostafa, SecuCode Pro, أمن سيبراني, كشف الاحتيال, أمان رقمي, فحص فيروسات, حماية المواقع, تحليل الروابط">
     <meta name="author" content="Tarek Mostafa">
     <meta name="robots" content="index, follow">
     <link rel="canonical" href="https://secu-code-pro.vercel.app/">
-    <link rel="sitemap" type="application/xml" href="/sitemap.xml">
+    
+    <link rel="sitemap" type="application/xml" href="{{ url_for('static', filename='sitemap.xml') }}">
 
-    <!-- 2. صورة المشاركة (الدرع 3D اللي اخترته) -->
     <meta property="og:type" content="website">
     <meta property="og:url" content="https://secu-code-pro.vercel.app/">
     <meta property="og:title" content="SecuCode Pro | درعك لحماية الروابط">
@@ -23,13 +22,12 @@
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:image" content="https://img.freepik.com/premium-vector/low-poly-shield-with-checkmark-cybersecurity-concept-digital-protection-blue-geometric-3d-design_145776-164385.jpg">
 
-    <!-- 3. الربط مع الموبايل (Manifest) -->
-    <link rel="manifest" href="/static/manifest.json">
+    <link rel="manifest" href="{{ url_for('static', filename='manifest.json') }}">
     <meta name="theme-color" content="#3b82f6">
 
-    <!-- المكتبات الخارجية -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="{{ url_for('static', filename='tailwind.css') }}"></script>
+    <script src="{{ url_for('static', filename='lucide.js') }}"></script>
+    
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
     
     <style>
@@ -47,7 +45,6 @@
     <div class="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_#1e293b,_#020617)]"></div>
 
     <main class="container mx-auto px-4 py-12 max-w-5xl">
-        <!-- الواجهة الرئيسية -->
         <header class="text-center mb-16 animate-in">
             <div class="inline-block px-4 py-1.5 mb-6 border border-blue-500/30 rounded-full bg-blue-500/10 text-blue-400 text-sm font-bold">
                 مشروع أمان متطور - بواسطة طارق مصطفى
@@ -58,7 +55,6 @@
             <p class="text-slate-400 max-w-2xl mx-auto text-lg">نظام <strong>فحص الروابط</strong> والتحليل السلوكي لكشف <strong>البرمجيات الخبيثة</strong> و <strong>الاحتيال</strong>.</p>
         </header>
 
-        <!-- مربع البحث (الكلمات المفتاحية موجودة في Placeholder للأرشفة) -->
         <section class="max-w-3xl mx-auto mb-20 animate-in" style="animation-delay: 0.1s;">
             <div class="glass p-3 input-glow transition-all">
                 <div class="flex flex-col md:flex-row gap-3">
@@ -75,11 +71,8 @@
             </div>
         </section>
 
-        <!-- منطقة نتائج التحليل -->
         <div id="resultsArea" class="hidden space-y-8 animate-in">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-                
-                <!-- كارت الحالة الرئيسي -->
                 <div id="statusCard" class="md:col-span-8 glass p-8 border-r-8 transition-all duration-500">
                     <div class="flex flex-col md:flex-row justify-between items-center gap-8">
                         <div class="text-center md:text-right">
@@ -102,7 +95,6 @@
                     </div>
                 </div>
 
-                <!-- إحصائيات سريعة -->
                 <div class="md:col-span-4 grid grid-cols-1 gap-4">
                     <div class="glass p-5 flex items-center gap-5">
                         <div class="p-3 bg-blue-500/10 rounded-2xl text-blue-500"><i data-lucide="share-2" class="w-6 h-6"></i></div>
@@ -120,7 +112,6 @@
                     </div>
                 </div>
 
-                <!-- مسار التحويلات والانتهاكات -->
                 <div class="md:col-span-6 space-y-4">
                     <h3 class="flex items-center gap-2 font-black text-xl px-2"><i data-lucide="map" class="w-6 h-6 text-blue-500"></i> خريطة المسار</h3>
                     <div id="redirectPath" class="space-y-3"></div>
@@ -130,7 +121,6 @@
                     <h3 class="flex items-center gap-2 font-black text-xl px-2"><i data-lucide="alert-circle" class="w-6 h-6 text-red-500"></i> تحليل المخاطر</h3>
                     <div id="violationsList" class="space-y-3"></div>
                 </div>
-
             </div>
         </div>
     </main>
@@ -141,7 +131,12 @@
     </footer>
 
     <script>
-        lucide.createIcons();
+        // تفعيل الأيقونات عند تحميل الصفحة
+        window.addEventListener('load', () => {
+            if (typeof lucide !== 'undefined') {
+                lucide.createIcons();
+            }
+        });
 
         async function startScan() {
             const input = document.getElementById('urlInput');
@@ -151,6 +146,7 @@
 
             btn.disabled = true;
             document.getElementById('btnText').textContent = "جاري التحليل السلوكي...";
+            const originalIcon = document.getElementById('btnIcon').outerHTML;
             document.getElementById('btnIcon').outerHTML = `<div class="loader" id="btnIcon"></div>`;
             results.classList.add('hidden');
 
@@ -164,7 +160,7 @@
                 renderUI(data);
             } catch (error) {
                 console.error(error);
-                alert("حدث خطأ في الاتصال. تأكد أن السيرفر يعمل.");
+                alert("حدث خطأ في الاتصال بالسيرفر.");
             } finally {
                 btn.disabled = false;
                 document.getElementById('btnText').textContent = "ابدأ الفحص";
@@ -192,10 +188,12 @@
             document.getElementById('riskDesc').textContent = config.desc;
             document.getElementById('riskScore').textContent = data.points;
             document.getElementById('redirectCount').textContent = data.redirects.length;
-            document.getElementById('encryptionStatus').textContent = data.redirects[0].startsWith('https') ? 'مشفر آمن' : 'غير مشفر';
+            
+            const firstLink = data.redirects[0] || "";
+            document.getElementById('encryptionStatus').textContent = firstLink.startsWith('https') ? 'مشفر آمن' : 'غير مشفر';
 
             const circle = document.getElementById('scoreCircle');
-            circle.style.strokeDashoffset = 402 - (data.points / 100) * 402;
+            circle.style.strokeDashoffset = 402 - (Math.min(data.points, 100) / 100) * 402;
             circle.style.color = config.color;
 
             document.getElementById('redirectPath').innerHTML = data.redirects.map((url, i) => `
@@ -223,4 +221,3 @@
     </script>
 </body>
 </html>
-
