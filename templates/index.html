@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar" dir="rtl" id="htmlTag">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,28 +19,20 @@
 
     <style>
         :root { --bg: #020617; --blue: #2563eb; --text-gray: #cbd5e1; }
-        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: #f8fafc; margin: 0; min-height: 100vh; }
-        
-        /* Glassmorphism Effect */
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: #f8fafc; margin: 0; min-height: 100vh; transition: all 0.3s ease; }
         .glass { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); }
-        
-        /* High Contrast for Accessibility 100/100 */
         .text-fix { color: var(--text-gray) !important; }
-        
-        /* Prevent Layout Shift (CLS) */
         .stat-card { min-height: 120px; display: flex; flex-direction: column; justify-content: center; }
-        
-        /* Animation & Loading */
         .scan-line { 
             position: absolute; height: 3px; width: 100%; 
             background: linear-gradient(to right, transparent, #3b82f6, transparent);
             animation: scan 2s linear infinite; 
         }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-
-        /* Focus Styles */
         button:focus, input:focus { outline: 2px solid var(--blue); outline-offset: 2px; }
         .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+        #langBtn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.2); }
+        #langBtn:hover { background: var(--blue); }
     </style>
 </head>
 <body class="p-6 md:p-12 relative">
@@ -50,38 +42,38 @@
         <header class="flex justify-between items-center mb-16">
             <div>
                 <h1 class="text-5xl md:text-6xl font-black italic tracking-tighter text-white uppercase">SECUCODE <span class="text-blue-600">PRO</span></h1>
-                <p class="text-[11px] font-bold tracking-[0.3em] text-fix uppercase mt-3">نظام طارق مصطفى للرصد الأمني - 2026</p>
+                <p id="hero-sub" class="text-[11px] font-bold tracking-[0.3em] text-fix uppercase mt-3">نظام طارق مصطفى للرصد الأمني - 2026</p>
             </div>
-            <button onclick="toggleLang()" aria-label="Switch Language" class="glass px-5 py-2 text-xs font-bold text-white rounded-full hover:bg-blue-600/20 transition-all border border-white/20">AR / EN</button>
+            <button onclick="toggleLang()" id="langBtn" class="px-6 py-2 text-xs font-black text-white rounded-full transition-all uppercase tracking-widest">English</button>
         </header>
 
         <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16">
             <div class="glass p-5 rounded-3xl text-center stat-card border-b-4 border-blue-600/50">
-                <span class="text-[10px] font-black text-fix uppercase">Total Scans</span>
+                <span id="stat-scans" class="text-[10px] font-black text-fix uppercase">إجمالي الفحص</span>
                 <p id="totalScanned" class="text-2xl font-black text-blue-500 font-mono mt-2">1,540</p>
             </div>
             <div class="glass p-5 rounded-3xl text-center stat-card border-b-4 border-red-600/50">
-                <span class="text-[10px] font-black text-fix uppercase">Threats Found</span>
+                <span id="stat-threats" class="text-[10px] font-black text-fix uppercase">التهديدات المكتشفة</span>
                 <p id="threatsDetected" class="text-2xl font-black text-red-500 font-mono mt-2">208</p>
             </div>
             <div class="glass p-5 rounded-3xl text-center stat-card border-b-4 border-green-600/50">
-                <span class="text-[10px] font-black text-fix uppercase">Accuracy</span>
+                <span id="stat-acc" class="text-[10px] font-black text-fix uppercase">الدقة</span>
                 <p class="text-2xl font-black text-green-500 font-mono mt-2">100%</p>
             </div>
             <div class="glass p-5 rounded-3xl text-center stat-card border-b-4 border-purple-600/50">
-                <span class="text-[10px] font-black text-fix uppercase">Protection</span>
-                <p class="text-[10px] font-black text-purple-400 mt-4 uppercase italic tracking-widest">Active AI</p>
+                <span id="stat-prot" class="text-[10px] font-black text-fix uppercase">الحماية</span>
+                <p id="active-ai" class="text-[10px] font-black text-purple-400 mt-4 uppercase italic">ذكاء نشط</p>
             </div>
         </section>
 
         <div class="glass p-4 flex flex-col md:flex-row gap-3 rounded-[2.5rem] mb-20 relative overflow-hidden">
             <div id="scanLine" class="hidden scan-line"></div>
-            <label for="urlInput" class="sr-only">أدخل الرابط المراد فحصه</label>
+            <label for="urlInput" class="sr-only">URL</label>
             <input type="url" id="urlInput" placeholder="أدخل الرابط بالكامل هنا..." 
                    class="w-full bg-transparent px-6 py-4 outline-none font-bold text-lg text-white border-none focus:ring-0">
-            <button onclick="startScan()" id="scanBtn" aria-label="بدء الفحص" class="bg-blue-600 hover:bg-blue-700 text-white px-12 py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-2 transition-all active:scale-95 shadow-xl shadow-blue-600/20">
+            <button onclick="startScan()" id="scanBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-2 transition-all active:scale-95 shadow-xl shadow-blue-600/20">
                 <i data-lucide="shield-check"></i>
-                <span>تحليل الآن</span>
+                <span id="btn-text">تحليل الآن</span>
             </button>
         </div>
 
@@ -90,8 +82,8 @@
 
     <footer class="mt-32 text-center border-t border-white/5 pt-10 pb-12">
         <div class="flex justify-center gap-8 mb-8">
-            <button onclick="openModal('aboutModal')" class="text-[10px] font-bold text-fix hover:text-blue-500 transition-colors uppercase tracking-[0.2em]">عن النظام</button>
-            <button onclick="openModal('privacyModal')" class="text-[10px] font-bold text-fix hover:text-blue-500 transition-colors uppercase tracking-[0.2em]">سياسة الخصوصية</button>
+            <button onclick="openModal('aboutModal')" id="footer-about" class="text-[10px] font-bold text-fix hover:text-blue-500 uppercase tracking-[0.2em]">عن النظام</button>
+            <button onclick="openModal('privacyModal')" id="footer-privacy" class="text-[10px] font-bold text-fix hover:text-blue-500 uppercase tracking-[0.2em]">سياسة الخصوصية</button>
         </div>
         <p class="text-fix text-[11px] font-bold tracking-[0.3em] uppercase">
             &copy; 2026 SECUCODE PRO - DEVELOPED BY TAREK MOSTAFA
@@ -101,82 +93,118 @@
     <div id="aboutModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
         <div class="glass max-w-2xl w-full p-10 rounded-[2.5rem] relative animate-in zoom-in duration-300">
             <button onclick="closeModal('aboutModal')" class="absolute top-8 left-8 text-fix hover:text-white"><i data-lucide="x"></i></button>
-            <h3 class="text-3xl font-black mb-6 text-blue-500 italic uppercase">About SecuCode</h3>
-            <div class="space-y-4 text-fix text-sm leading-relaxed">
-                <p>نظام **SecuCode Pro** هو مشروع أمني متكامل طوره **طارق مصطفى** لعام 2026، يهدف إلى خلق فضاء إلكتروني آمن للمستخدم العربي.</p>
-                <p>يعمل النظام عبر خوارزميات ذكاء اصطناعي تقوم بتحليل الروابط في بيئة معزولة، مما يسمح باكتشاف محاولات التجسس على الكاميرا، وسرقة الجلسات (Sessions)، وصفحات التصيد الاحتيالي قبل أن تصل إليك.</p>
-            </div>
+            <h3 id="modal-about-title" class="text-3xl font-black mb-6 text-blue-500 italic uppercase">عن النظام</h3>
+            <div id="modal-about-body" class="space-y-4 text-fix text-sm leading-relaxed"></div>
         </div>
     </div>
 
     <div id="privacyModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
         <div class="glass max-w-2xl w-full p-10 rounded-[2.5rem] relative animate-in zoom-in duration-300">
             <button onclick="closeModal('privacyModal')" class="absolute top-8 left-8 text-fix hover:text-white"><i data-lucide="x"></i></button>
-            <h3 class="text-3xl font-black mb-6 text-red-500 italic uppercase">Privacy Policy</h3>
-            <div class="space-y-4 text-fix text-sm leading-relaxed text-right">
-                <p>نحن نحترم خصوصيتك بشكل كامل:</p>
-                <ul class="list-disc list-inside space-y-2">
-                    <li>لا يتم تسجيل أي بيانات شخصية للمستخدمين.</li>
-                    <li>الروابط المفحوصة لا يتم حفظها في سجلات دائمة.</li>
-                    <li>عملية الفحص سحابية بالكامل ولا تتطلب الوصول لملفات جهازك.</li>
-                </ul>
-            </div>
+            <h3 id="modal-priv-title" class="text-3xl font-black mb-6 text-red-500 italic uppercase">سياسة الخصوصية</h3>
+            <div id="modal-priv-body" class="space-y-4 text-fix text-sm leading-relaxed"></div>
         </div>
     </div>
 
     <script>
-        // Initialization
-        window.addEventListener('load', () => { 
+        const translations = {
+            ar: {
+                dir: "rtl", langBtn: "English",
+                heroSub: "نظام طارق مصطفى للرصد الأمني - 2026",
+                statScans: "إجمالي الفحص", statThreats: "التهديدات المكتشفة", statAcc: "الدقة", statProt: "الحماية", activeAi: "ذكاء نشط",
+                placeholder: "أدخل الرابط بالكامل هنا...", btnText: "تحليل الآن",
+                footerAbout: "عن النظام", footerPrivacy: "سياسة الخصوصية",
+                aboutTitle: "About SECUCODE PRO",
+                aboutBody: "<p>نظام SecuCode Pro هو مشروع أمني متكامل طوره طارق مصطفى، يهدف إلى خلق فضاء إلكتروني آمن للمستخدم العربي.</p><p>يعمل النظام عبر خوارزميات ذكاء اصطناعي تقوم بتحليل الروابط واكتشاف محاولات التجسس على الكاميرا وصفحات التصيد.</p>",
+                privTitle: "Privacy Policy",
+                privBody: "<p>خصوصيتك هي أولويتنا: لا نسجل بياناتك، الروابط المفحوصة لا يتم حفظها، والفحص يتم في بيئة معزولة تماماً.</p>",
+                statusLabel: "حالة الأمان", riskLabel: "نقاط الخطورة"
+            },
+            en: {
+                dir: "ltr", langBtn: "العربية",
+                heroSub: "Tarek Mostafa Security Radar - 2026",
+                statScans: "Total Scans", statThreats: "Threats Found", statAcc: "Accuracy", statProt: "Protection", activeAi: "Active AI",
+                placeholder: "Enter full URL here...", btnText: "Analyze Now",
+                footerAbout: "About System", footerPrivacy: "Privacy Policy",
+                aboutTitle: "About SECUCODE PRO",
+                aboutBody: "<p>SecuCode Pro is an advanced security system developed by Tarek Mostafa, protecting your digital space.</p><p>The system uses AI to analyze links for spy-scripts, phishing, and unauthorized camera access.</p>",
+                privTitle: "Privacy Policy",
+                privBody: "<p>Your privacy is our priority: No logs are kept, no URLs are stored, and analysis runs in a 100% secure sandbox.</p>",
+                statusLabel: "Security Status", riskLabel: "Risk Index"
+            }
+        };
+
+        let currentLang = 'ar';
+
+        function updateUI() {
+            const t = translations[currentLang];
+            document.getElementById('htmlTag').dir = t.dir;
+            document.getElementById('langBtn').textContent = t.langBtn;
+            document.getElementById('hero-sub').textContent = t.heroSub;
+            document.getElementById('stat-scans').textContent = t.statScans;
+            document.getElementById('stat-threats').textContent = t.statThreats;
+            document.getElementById('stat-acc').textContent = t.statAcc;
+            document.getElementById('stat-prot').textContent = t.statProt;
+            document.getElementById('active-ai').textContent = t.activeAi;
+            document.getElementById('urlInput').placeholder = t.placeholder;
+            document.getElementById('btn-text').textContent = t.btnText;
+            document.getElementById('footer-about').textContent = t.footerAbout;
+            document.getElementById('footer-privacy').textContent = t.footerPrivacy;
+            document.getElementById('modal-about-title').textContent = t.aboutTitle;
+            document.getElementById('modal-about-body').innerHTML = t.aboutBody;
+            document.getElementById('modal-priv-title').textContent = t.privTitle;
+            document.getElementById('modal-priv-body').innerHTML = t.privBody;
+        }
+
+        function toggleLang() {
+            currentLang = currentLang === 'ar' ? 'en' : 'ar';
+            updateUI();
             if(window.lucide) lucide.createIcons();
+        }
+
+        window.addEventListener('load', () => { 
+            updateUI(); 
+            if(window.lucide) lucide.createIcons(); 
         });
 
         async function startScan() {
-            const urlInput = document.getElementById('urlInput');
-            const url = urlInput.value.trim();
-            if(!url) return;
-
+            const val = document.getElementById('urlInput').value.trim();
+            if(!val) return;
             const btn = document.getElementById('scanBtn');
             const line = document.getElementById('scanLine');
-            
-            btn.disabled = true;
-            line.classList.remove('hidden');
+            btn.disabled = true; line.classList.remove('hidden');
 
             try {
-                const response = await fetch('/analyze', {
+                const res = await fetch('/analyze', {
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
-                    body: JSON.stringify({ link: url })
+                    body: JSON.stringify({ link: val })
                 });
-                const data = await response.json();
+                const data = await res.json();
                 renderResults(data);
-            } catch (error) {
-                alert("تعذر الاتصال بخادم الفحص. يرجى المحاولة لاحقاً.");
-            } finally {
-                btn.disabled = false;
-                line.classList.add('hidden');
-            }
+            } catch (e) { alert(currentLang === 'ar' ? "خطأ في الشبكة" : "Network Error"); }
+            finally { btn.disabled = false; line.classList.add('hidden'); }
         }
 
         function renderResults(data) {
             const area = document.getElementById('resultsArea');
             area.classList.remove('hidden');
-            
-            // Update Stats
             document.getElementById('totalScanned').textContent = data.stats.total.toLocaleString();
             document.getElementById('threatsDetected').textContent = data.stats.threats.toLocaleString();
             
             const color = data.risk_score === 'Critical' ? '#ef4444' : '#22c55e';
-            
+            const t = translations[currentLang];
+
             area.innerHTML = `
                 <div class="glass p-10 rounded-[3rem] border-r-[15px] animate-in slide-in-from-bottom-10 duration-700" style="border-color: ${color}">
                     <div class="flex justify-between items-center mb-10">
                         <div>
-                            <p class="text-xs font-bold text-fix uppercase mb-2">Security Status</p>
+                            <p class="text-[10px] font-bold text-fix uppercase mb-2">${t.statusLabel}</p>
                             <h2 class="text-6xl font-black italic uppercase" style="color: ${color}">${data.risk_score}</h2>
                         </div>
                         <div class="text-right">
                             <p class="text-6xl font-black" style="color: ${color}">${data.points}</p>
-                            <p class="text-xs font-bold text-fix uppercase">Risk Score</p>
+                            <p class="text-[10px] font-bold text-fix uppercase">${t.riskLabel}</p>
                         </div>
                     </div>
                     <div class="space-y-4">
@@ -188,28 +216,12 @@
                         `).join('')}
                     </div>
                 </div>`;
-            
             lucide.createIcons();
             window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
 
-        // Modal Controls
-        function openModal(id) {
-            document.getElementById(id).classList.remove('hidden');
-            document.body.style.overflow = 'hidden';
-        }
-        function closeModal(id) {
-            document.getElementById(id).classList.add('hidden');
-            document.body.style.overflow = 'auto';
-        }
-
-        // Close modal on outside click
-        window.onclick = function(e) {
-            if (e.target.classList.contains('bg-black/80')) {
-                e.target.classList.add('hidden');
-                document.body.style.overflow = 'auto';
-            }
-        }
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); document.body.style.overflow = 'hidden'; }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); document.body.style.overflow = 'auto'; }
     </script>
 </body>
 </html>
