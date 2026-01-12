@@ -12,18 +12,9 @@
       "headers": { "cache-control": "public, max-age=31536000, immutable" },
       "dest": "/static/$1"
     },
-    {
-      "src": "/manifest.json",
-      "dest": "app.py"
-    },
-    {
-      "src": "/sitemap.xml",
-      "dest": "app.py"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "app.py"
-    }
-  ],
-  "cleanUrls": true
+    { "src": "/manifest.json", "dest": "/static/manifest.json" },
+    { "src": "/sitemap.xml", "dest": "/static/sitemap.xml" },
+    { "src": "/robots.txt", "dest": "/static/robots.txt" },
+    { "src": "/(.*)", "dest": "app.py" }
+  ]
 }
