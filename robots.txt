@@ -1,0 +1,14 @@
+# SecuCode Pro - Robots Configuration
+# Developed by Tarek Mostafa
+
+User-agent: *
+Allow: /
+Allow: /static/
+
+# منع العناكب من الدخول لملفات النظام
+Disallow: /__pycache__/
+Disallow: /.env
+Disallow: /venv/
+
+# المسار الصحيح والمباشر للخريطة
+Sitemap: https://secu-code-pro.vercel.app/static/sitemap.xml
