@@ -1,8 +1,29 @@
 {
   "version": 2,
+  "builds": [
+    {
+      "src": "app.py",
+      "use": "@vercel/python"
+    }
+  ],
   "routes": [
-    { "src": "/static/(.*)", "dest": "/static/$1" },
-    { "src": "/manifest.json", "dest": "/static/manifest.json" },
-    { "src": "/(.*)", "dest": "app.py" }
-  ]
+    {
+      "src": "/static/(.*)",
+      "headers": { "cache-control": "public, max-age=31536000, immutable" },
+      "dest": "/static/$1"
+    },
+    {
+      "src": "/manifest.json",
+      "dest": "app.py"
+    },
+    {
+      "src": "/sitemap.xml",
+      "dest": "app.py"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "app.py"
+    }
+  ],
+  "cleanUrls": true
 }
