@@ -1,120 +1,96 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl" id="htmlTag">
+<html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="رادار طارق مصطفى المتطور لفحص أمان الروابط وكشف اختراق الكاميرا والصفحات المزورة لعام 2026.">
     <title>SecuCode Pro | رادار طارق مصطفى</title>
     
-    <link rel="manifest" href="/static/manifest.json">
-    <link rel="sitemap" type="application/xml" href="/static/sitemap.xml">
-    <meta name="theme-color" content="#2563eb">
-
+    <link rel="manifest" href="/manifest.json">
+    <link rel="icon" href="https://cdn-icons-png.flaticon.com/512/9446/9446698.png">
+    
     <script src="https://cdn.tailwindcss.com/3.4.1"></script>
     <script src="https://unpkg.com/lucide@0.300.0/dist/umd/lucide.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+    
     <style>
-        body { font-family: 'Cairo', sans-serif; background-color: #020617; color: white; }
-        .glass { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.08); border-radius: 1.5rem; }
-        .cyber-text { text-transform: uppercase; letter-spacing: 0.1em; font-size: 10px; font-weight: bold; color: #64748b; }
+        :root { --bg: #020617; --blue: #2563eb; }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: white; margin: 0; }
+        .glass { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.05); border-radius: 1.2rem; }
+        .scan-line { position: absolute; height: 2px; width: 100%; background: var(--blue); animation: scan 2s linear infinite; }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
-        .scan-line { position: absolute; height: 2px; width: 100%; background: #2563eb; box-shadow: 0 0 15px #2563eb; animation: scan 2s linear infinite; }
     </style>
 </head>
-<body class="min-h-screen p-4 md:p-12 overflow-x-hidden">
-    <div class="fixed inset-0 -z-10 bg-[radial-gradient(ellipse_at_top,_#0f172a,_#020617)]"></div>
+<body class="min-h-screen p-6 md:p-12">
+    <div class="fixed inset-0 -z-10 bg-[radial-gradient(circle_at_top,_#0f172a,_#020617)]"></div>
 
     <main class="max-w-4xl mx-auto">
-        <header class="flex justify-between items-start mb-12">
+        <header class="flex justify-between items-center mb-10">
             <div class="text-right">
-                <h1 class="text-6xl font-black italic tracking-tighter text-white">SECUCODE<span class="text-blue-500"> PRO</span></h1>
-                <p id="subTitle" class="cyber-text">نظام طارق مصطفى للرصد الاستخباراتي - 2026</p>
+                <h1 class="text-4xl md:text-5xl font-black italic">SECUCODE <span class="text-blue-500">PRO</span></h1>
+                <p class="text-[10px] text-slate-500 font-bold tracking-widest uppercase">Tarek Mostafa Security Intelligence</p>
             </div>
-            <button onclick="toggleLang()" class="glass px-4 py-2 text-[10px] font-bold hover:bg-blue-600/20 transition-all">EN / AR</button>
+            <div class="glass px-3 py-1 text-[10px] border-blue-500/50 text-blue-400 font-bold uppercase">v2.0 Stable</div>
         </header>
 
-        <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 text-center">
-            <div class="glass p-5 border-b-2 border-blue-500/30">
-                <p class="cyber-text">TOTAL SCANS</p>
-                <p id="totalScanned" class="text-2xl font-black text-blue-500 font-mono">---</p>
+        <section class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-10">
+            <div class="glass p-4 text-center border-b-2 border-blue-500/20">
+                <p class="text-[9px] font-bold text-slate-500">SCANS</p>
+                <p id="totalScanned" class="text-xl font-black text-blue-500">---</p>
             </div>
-            <div class="glass p-5 border-b-2 border-red-500/30">
-                <p class="cyber-text">THREATS BLOCKED</p>
-                <p id="threatsDetected" class="text-2xl font-black text-red-500 font-mono">---</p>
+            <div class="glass p-4 text-center border-b-2 border-red-500/20">
+                <p class="text-[9px] font-bold text-slate-500">THREATS</p>
+                <p id="threatsDetected" class="text-xl font-black text-red-500">---</p>
             </div>
-            <div class="glass p-5 border-b-2 border-green-500/30">
-                <p class="cyber-text">PRECISION</p>
-                <p class="text-2xl font-black text-green-500 font-mono">99.8%</p>
+            <div class="glass p-4 text-center border-b-2 border-green-500/20">
+                <p class="text-[9px] font-bold text-slate-500">STATUS</p>
+                <p class="text-xl font-black text-green-500 italic uppercase">Active</p>
             </div>
-            <div class="glass p-5 border-b-2 border-purple-500/30">
-                <p class="cyber-text">DB SYNC</p>
-                <p id="updateTime" class="text-xs font-black text-purple-400 font-mono">--:--:--</p>
+            <div class="glass p-4 text-center border-b-2 border-purple-500/20">
+                <p class="text-[9px] font-bold text-slate-500">LAST SYNC</p>
+                <p id="updateTime" class="text-[10px] font-black text-purple-400 mt-2">--:--:--</p>
             </div>
         </section>
 
-        <div class="glass p-3 flex flex-col md:flex-row gap-3 mb-16 relative overflow-hidden">
+        <div class="glass p-3 relative overflow-hidden mb-12 transition-all hover:border-blue-500/30">
             <div id="scanLine" class="hidden scan-line"></div>
-            <input type="url" id="urlInput" placeholder="أدخل الرابط المراد فحصه..." class="w-full bg-slate-900/50 rounded-xl px-5 py-4 outline-none border border-white/5 focus:border-blue-500/50 font-bold text-white">
-            <button onclick="startScan()" id="scanBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-4 rounded-xl font-bold flex items-center justify-center gap-2">
-                <i data-lucide="shield-alert"></i> <span id="scanBtnText">فحص الوجهة</span>
-            </button>
+            <div class="flex flex-col md:flex-row gap-2">
+                <input type="url" id="urlInput" placeholder="أدخل الرابط المراد تحليله..." class="w-full bg-transparent p-4 outline-none font-bold text-sm">
+                <button onclick="startScan()" id="scanBtn" class="bg-blue-600 hover:bg-blue-700 px-8 py-4 rounded-xl font-black text-sm flex items-center justify-center gap-2 transition-transform active:scale-95">
+                    <i data-lucide="shield-check"></i> <span>ابدأ الفحص</span>
+                </button>
+            </div>
         </div>
 
-        <div id="resultsArea" class="hidden space-y-6">
-            <div id="statusCard" class="glass p-8 border-r-8 transition-all duration-700">
-                <div class="flex justify-between items-center mb-8">
-                    <div>
-                        <p class="cyber-text mb-1">DETECTION REPORT</p>
-                        <h2 id="riskStatus" class="text-5xl font-black italic">--</h2>
-                    </div>
-                    <div class="text-right">
-                        <p id="riskScore" class="text-4xl font-black font-mono">0/100</p>
-                        <p class="cyber-text">RISK SCORE</p>
-                    </div>
+        <div id="resultsArea" class="hidden animate-in fade-in duration-700">
+            <div id="statusCard" class="glass p-8 border-r-4 transition-all duration-500">
+                <div class="flex justify-between items-end mb-6">
+                    <div><p class="text-[10px] font-bold text-slate-500 mb-2 uppercase">Analysis Result</p><h2 id="riskStatus" class="text-5xl font-black italic uppercase">---</h2></div>
+                    <div class="text-right"><p id="riskScore" class="text-4xl font-black">0/100</p><p class="text-[9px] font-bold text-slate-500">RISK INDEX</p></div>
                 </div>
-                <div id="violationsList" class="space-y-4"></div>
+                <div id="violationsList" class="grid gap-3"></div>
             </div>
         </div>
     </main>
 
     <script>
         lucide.createIcons();
-        let lang = 'ar';
-        const dict = {
-            ar: { sub: "نظام طارق مصطفى للرصد الاستخباراتي - 2026", placeholder: "أدخل الرابط المراد فحصه...", scan: "فحص الوجهة", scanning: "جاري التحليل..." },
-            en: { sub: "Tarek Mostafa Threat Intelligence System - 2026", placeholder: "Enter target URL for scan...", scan: "Scan Destination", scanning: "Analyzing..." }
-        };
-
-        function toggleLang() {
-            lang = lang === 'ar' ? 'en' : 'ar';
-            document.getElementById('htmlTag').dir = lang === 'ar' ? 'rtl' : 'ltr';
-            document.getElementById('subTitle').textContent = dict[lang].sub;
-            document.getElementById('urlInput').placeholder = dict[lang].placeholder;
-            document.getElementById('scanBtnText').textContent = dict[lang].scan;
-        }
-
+        
         window.onload = () => {
-            const startDate = new Date('2026-01-01');
-            const now = new Date();
-            const days = Math.floor((now - startDate) / 86400000);
-            let total = 1540 + (days * 41) + (now.getHours() * 3);
+            const total = 1540 + (Math.floor((new Date() - new Date('2026-01-01'))/86400000) * 41);
             document.getElementById('totalScanned').textContent = total.toLocaleString();
             document.getElementById('threatsDetected').textContent = Math.floor(total * 0.13).toLocaleString();
-            
-            setInterval(() => {
-                let el = document.getElementById('totalScanned');
-                let curr = parseInt(el.textContent.replace(/,/g, ''));
-                if(Math.random() > 0.6) el.textContent = (curr + 1).toLocaleString();
-            }, 5000);
         };
 
         async function startScan() {
-            const url = document.getElementById('urlInput').value;
+            const url = document.getElementById('urlInput').value.trim();
             if(!url) return;
+            
             const btn = document.getElementById('scanBtn');
+            const line = document.getElementById('scanLine');
             btn.disabled = true;
-            document.getElementById('scanBtnText').textContent = dict[lang].scanning;
-            document.getElementById('scanLine').classList.remove('hidden');
-
+            line.classList.remove('hidden');
+            
             try {
                 const res = await fetch('/analyze', {
                     method: 'POST',
@@ -123,36 +99,30 @@
                 });
                 const data = await res.json();
                 renderUI(data);
-            } catch (e) { alert("Error connecting to server"); }
+            } catch (e) { alert("تعذر الاتصال بالمحرك."); }
             finally {
                 btn.disabled = false;
-                document.getElementById('scanBtnText').textContent = dict[lang].scan;
-                document.getElementById('scanLine').classList.add('hidden');
-                lucide.createIcons();
+                line.classList.add('hidden');
             }
         }
 
         function renderUI(data) {
             document.getElementById('resultsArea').classList.remove('hidden');
             document.getElementById('updateTime').textContent = data.last_update;
-            const themes = { 'Low': '#22c55e', 'High': '#f97316', 'Critical': '#ef4444' };
-            const color = themes[data.risk_score] || '#ef4444';
+            const color = data.risk_score === 'Critical' ? '#ef4444' : (data.risk_score === 'High' ? '#f97316' : '#22c55e');
             
             document.getElementById('riskStatus').textContent = data.risk_score;
             document.getElementById('riskStatus').style.color = color;
             document.getElementById('statusCard').style.borderColor = color;
-            document.getElementById('riskScore').textContent = data.points + "/100";
+            document.getElementById('riskScore').textContent = data.points;
             
-            document.getElementById('totalScanned').textContent = data.stats.total.toLocaleString();
-            document.getElementById('threatsDetected').textContent = data.stats.threats.toLocaleString();
-
             document.getElementById('violationsList').innerHTML = data.violations.map(v => `
-                <div class="bg-slate-900/50 border border-white/5 p-5 rounded-2xl flex items-start gap-4">
-                    <i data-lucide="shield-alert" style="color: ${color}"></i>
-                    <div><h4 class="font-bold text-sm" style="color: ${color}">${v.name}</h4><p class="text-xs text-slate-400 mt-1">${v.desc}</p></div>
+                <div class="bg-slate-900/40 p-4 rounded-xl border border-white/5 flex items-center gap-4">
+                    <div class="p-2 rounded-lg bg-red-500/10"><i data-lucide="alert-triangle" class="w-4 h-4" style="color:${color}"></i></div>
+                    <div><h4 class="font-bold text-sm">${v.name}</h4><p class="text-[10px] text-slate-400">${v.desc}</p></div>
                 </div>`).join('');
             lucide.createIcons();
-            document.getElementById('resultsArea').scrollIntoView({ behavior: 'smooth' });
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
         }
     </script>
 </body>
