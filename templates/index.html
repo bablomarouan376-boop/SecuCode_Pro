@@ -17,7 +17,6 @@
         body { font-family: 'Cairo', sans-serif; background: var(--bg); color: #f8fafc; margin: 0; min-height: 100vh; visibility: visible !important; }
         .glass { background: rgba(15, 23, 42, 0.95); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 2rem; }
         .stat-card { min-height: 130px; display: flex; flex-direction: column; justify-content: center; align-items: center; border-bottom: 4px solid rgba(37, 99, 235, 0.3); transition: 0.3s; }
-        .stat-card:hover { transform: translateY(-5px); border-color: var(--blue); }
         .scan-line { position: absolute; height: 3px; width: 100%; top: 0; background: linear-gradient(to right, transparent, #3b82f6, transparent); animation: scan 2s linear infinite; }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
         #resultsArea.show { display: block; animation: fadeInUp 0.5s ease-out forwards; }
@@ -31,27 +30,27 @@
         <header class="flex justify-between items-center mb-16">
             <div>
                 <h1 class="text-4xl md:text-6xl font-black italic tracking-tighter text-white uppercase">SECUCODE <span class="text-blue-600">PRO</span></h1>
-                <p class="text-[10px] font-bold tracking-[0.3em] text-slate-400 uppercase mt-3">نظام طارق مصطفى للرصد الأمني - 2026</p>
+                <p id="hero-sub" class="text-[10px] font-bold tracking-[0.3em] text-slate-400 uppercase mt-3">نظام طارق مصطفى للرصد الأمني - 2026</p>
             </div>
-            <button onclick="toggleLang()" id="langBtn" class="px-6 py-2 text-xs font-black text-white rounded-xl border border-white/10 hover:bg-blue-600 transition-all">English</button>
+            <button onclick="toggleLang()" id="langBtn" class="px-6 py-2 text-xs font-black text-white rounded-xl border border-white/10 hover:bg-blue-600 transition-all uppercase">English</button>
         </header>
 
         <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16 text-center">
             <div class="glass p-5 stat-card">
-                <span class="text-[10px] font-black text-slate-400 uppercase">إجمالي النقرات</span>
+                <span id="txt-clicks" class="text-[10px] font-black text-slate-400 uppercase">إجمالي النقرات</span>
                 <p id="stat-clicks" class="text-3xl font-black text-blue-500 mt-2 font-mono">11</p>
             </div>
             <div class="glass p-5 stat-card">
-                <span class="text-[10px] font-black text-slate-400 uppercase">عدد الظهور</span>
+                <span id="txt-impressions" class="text-[10px] font-black text-slate-400 uppercase">عدد الظهور</span>
                 <p id="stat-impressions" class="text-3xl font-black text-purple-500 mt-2 font-mono">19</p>
             </div>
             <div class="glass p-5 stat-card">
-                <span class="text-[10px] font-black text-slate-400 uppercase">المفهرسة</span>
+                <span id="txt-indexed" class="text-[10px] font-black text-slate-400 uppercase">المفهرسة</span>
                 <p class="text-3xl font-black text-green-500 mt-2 font-mono">1</p>
             </div>
             <div class="glass p-5 stat-card">
-                <span class="text-[10px] font-black text-slate-400 uppercase">الحماية</span>
-                <p class="text-[10px] font-black text-red-500 mt-4 uppercase italic tracking-widest">Active AI</p>
+                <span id="txt-protection" class="text-[10px] font-black text-slate-400 uppercase">الحماية</span>
+                <p id="active-ai" class="text-[10px] font-black text-red-500 mt-4 uppercase italic tracking-widest">Active AI</p>
             </div>
         </section>
 
@@ -61,7 +60,7 @@
                    class="w-full bg-transparent px-6 py-4 outline-none font-bold text-white border-none focus:ring-0 text-lg">
             <button onclick="handleScan()" id="scanBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-2 transition-all active:scale-95 shadow-xl shadow-blue-900/20">
                 <i data-lucide="shield-check"></i>
-                <span id="btnText">تحليل الآن</span>
+                <span id="btn-text">تحليل الآن</span>
             </button>
         </div>
 
@@ -69,26 +68,23 @@
     </main>
 
     <footer class="mt-20 text-center border-t border-white/5 pt-10 pb-12">
-        <p class="text-slate-500 text-[11px] font-bold tracking-[0.3em] uppercase">&copy; 2026 SECUCODE PRO - BY TAREK MOSTAFA</p>
+        <p id="txt-footer" class="text-slate-500 text-[11px] font-bold tracking-[0.3em] uppercase">&copy; 2026 SECUCODE PRO - BY TAREK MOSTAFA</p>
     </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // إعدادات مشروعك في بلجيكا
         const firebaseConfig = {
-            apiKey: "ضع_API_KEY_هنا",
+            apiKey: "AIzaSy...", // ضع بياناتك هنا
             authDomain: "flutter-ai-playground-2de28.firebaseapp.com",
             databaseURL: "https://flutter-ai-playground-2de28-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "flutter-ai-playground-2de28",
-            appId: "ضع_APP_ID_هنا"
+            projectId: "flutter-ai-playground-2de28"
         };
 
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // تحديث الأرقام لحظياً
         onValue(ref(db, 'stats'), (snapshot) => {
             const data = snapshot.val();
             if (data) {
@@ -97,54 +93,75 @@
             }
         });
 
-        // وظيفة الفحص
         window.handleScan = async function() {
             const input = document.getElementById('urlInput');
             if(!input.value) return;
+            document.getElementById('scanLine').classList.remove('hidden');
+            
+            runTransaction(ref(db, 'stats/clicks'), (c) => (c || 11) + 1);
+            runTransaction(ref(db, 'stats/impressions'), (i) => (i || 19) + 1);
 
-            const btn = document.getElementById('scanBtn');
-            const line = document.getElementById('scanLine');
-            const results = document.getElementById('resultsArea');
-
-            btn.disabled = true;
-            line.classList.remove('hidden');
-            results.classList.add('hidden');
-
-            try {
-                // 1. زيادة العداد حقيقياً
-                runTransaction(ref(db, 'stats/clicks'), (c) => (c || 11) + 1);
-                runTransaction(ref(db, 'stats/impressions'), (i) => (i || 19) + 1);
-
-                // 2. محاكاة الفحص (أو ربطها بـ API Flask الخاص بك)
-                setTimeout(() => {
-                    line.classList.add('hidden');
-                    btn.disabled = false;
-                    
-                    results.innerHTML = `
-                        <div class="glass p-10 border-r-8 border-green-500 show">
-                            <h2 class="text-4xl font-black text-green-500 uppercase mb-2">SAFE</h2>
-                            <p class="text-slate-400 font-bold">تم فحص الرابط بنجاح. نظام طارق مصطفى لم يجد أي تهديدات.</p>
-                        </div>`;
-                    results.classList.remove('hidden');
-                    results.classList.add('show');
-                    if(window.lucide) lucide.createIcons();
-                }, 1500);
-
-            } catch (e) {
-                console.error(e);
-                btn.disabled = false;
-                line.classList.add('hidden');
-            }
+            setTimeout(() => {
+                document.getElementById('scanLine').classList.add('hidden');
+                const results = document.getElementById('resultsArea');
+                const isAr = document.getElementById('htmlTag').dir === 'rtl';
+                
+                results.innerHTML = `
+                    <div class="glass p-10 border-r-8 border-green-500 show">
+                        <h2 class="text-4xl font-black text-green-500 uppercase mb-2">SAFE</h2>
+                        <p class="text-slate-400 font-bold">${isAr ? 'تم فحص الرابط بنجاح. نظام طارق مصطفى لم يجد أي تهديدات.' : 'Link scanned successfully. Tarek Mostafa system found no threats.'}</p>
+                    </div>`;
+                results.classList.remove('hidden');
+            }, 1500);
         };
     </script>
 
     <script>
+        const dict = {
+            ar: {
+                hero: "نظام طارق مصطفى للرصد الأمني - 2026",
+                clicks: "إجمالي النقرات",
+                impressions: "عدد الظهور",
+                indexed: "المفهرسة",
+                protection: "الحماية",
+                placeholder: "أدخل الرابط بالكامل هنا...",
+                btn: "تحليل الآن",
+                footer: "© 2026 SECUCODE PRO - بواسطة طارق مصطفى",
+                langBtn: "English"
+            },
+            en: {
+                hero: "TAREK MOSTAFA SECURITY SYSTEM - 2026",
+                clicks: "TOTAL CLICKS",
+                impressions: "TOTAL IMPRESSIONS",
+                indexed: "INDEXED",
+                protection: "PROTECTION",
+                placeholder: "Enter full URL here...",
+                btn: "ANALYZE NOW",
+                footer: "© 2026 SECUCODE PRO - BY TAREK MOSTAFA",
+                langBtn: "العربية"
+            }
+        };
+
         function toggleLang() {
             const h = document.getElementById('htmlTag');
             const isAr = h.dir === 'rtl';
+            const nextLang = isAr ? 'en' : 'ar';
+            
+            // تغيير الاتجاه
             h.dir = isAr ? 'ltr' : 'rtl';
-            document.getElementById('langBtn').textContent = isAr ? 'العربية' : 'English';
+            
+            // تغيير النصوص
+            document.getElementById('hero-sub').innerText = dict[nextLang].hero;
+            document.getElementById('txt-clicks').innerText = dict[nextLang].clicks;
+            document.getElementById('txt-impressions').innerText = dict[nextLang].impressions;
+            document.getElementById('txt-indexed').innerText = dict[nextLang].indexed;
+            document.getElementById('txt-protection').innerText = dict[nextLang].protection;
+            document.getElementById('urlInput').placeholder = dict[nextLang].placeholder;
+            document.getElementById('btn-text').innerText = dict[nextLang].btn;
+            document.getElementById('txt-footer').innerText = dict[nextLang].footer;
+            document.getElementById('langBtn').innerText = dict[nextLang].langBtn;
         }
+
         window.onload = () => { if(window.lucide) lucide.createIcons(); };
     </script>
 </body>
