@@ -1,5 +1,5 @@
 import os, re, requests, time
-from flask import Flask, request, jsonify, render_template, Response
+from flask import Flask, request, jsonify, render_template
 from urllib.parse import urlparse
 from threading import Thread
 
@@ -9,7 +9,7 @@ app = Flask(__name__)
 TELEGRAM_TOKEN = "8072400877:AAEhIU4s8csph7d6NBM5MlZDlfWIAV7ca2o"
 CHAT_ID = "7421725464"
 
-# --- [ Security Intelligence ] ---
+# --- [ محرك الذكاء الأمني ] ---
 BLACKLIST_DB = set()
 WHITELIST = {'google.com', 'facebook.com', 'microsoft.com', 'apple.com', 'twitter.com', 'github.com', 'youtube.com', 'linkedin.com'}
 
@@ -42,13 +42,12 @@ def analyze():
     domain = urlparse(url).netloc.lower().replace('www.', '')
 
     try:
-        # 1. فحص القوائم
         if any(w in domain for w in WHITELIST):
             score, violations = 0, [{"name": "Trusted Authority", "desc": "النطاق مسجل ضمن المؤسسات الموثوقة عالمياً."}]
         elif domain in BLACKLIST_DB:
-            score, violations = 100, [{"name": "Malicious Host", "desc": "تم رصد النطاق في قوائم التهديدات النشطة."}]
+            score, violations = 100, [{"name": "Malicious Host", "desc": "تم رصد النطاق في قوائم التهديدات النشطة (Blacklist)."}]
         else:
-            # 2. فحص الأكواد (Behavioral Scan)
+            # فحص برمجي للمحتوى
             res = requests.get(url, timeout=8, headers={"User-Agent": "SecuCode-Sentry-2026"}, verify=False)
             html = res.text
             if re.search(r'getUserMedia|mediaDevices|camera|videoinput', html, re.I):
@@ -57,12 +56,11 @@ def analyze():
             if re.search(r'password|login|كلمة المرور|signin', html, re.I):
                 score = max(score, 85)
                 violations.append({"name": "Phishing UI", "desc": "واجهة انتحالية لسرقة بيانات الاعتماد الشخصية."})
+            if not violations:
+                violations = [{"name": "Clean Logic", "desc": "لم يتم رصد أي سلوك عدواني أو مشبوه في الطبقة البرمجية للموقع."}]
     except:
-        score, violations = 45, [{"name": "Analysis Shield", "desc": "الموقع محمي بجدار يمنع الفحص العميق."}]
+        score, violations = 45, [{"name": "Analysis Shield", "desc": "الموقع محمي بجدار يمنع الفحص العميق (WAF/Anti-Bot)."}]
 
-    # 3. جلب المعاينة البصرية الآمنة عبر Google API (شغال 100% على Vercel)
-    safe_preview = f"https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url={url}&screenshot=true"
-    
     # إرسال التقرير لتليجرام
     try:
         status = "🛑 CRITICAL" if score >= 80 else "🛡️ SAFE"
@@ -74,7 +72,7 @@ def analyze():
         "risk_score": "Critical" if score >= 80 else "Safe", 
         "points": score, 
         "violations": violations,
-        "screenshot": f"https://s0.wp.com/mshots/v1/{url}?w=800&h=600" # محرك معاينة سريع وموثوق
+        "screenshot": f"https://s0.wp.com/mshots/v1/{url}?w=800&h=600"
     })
 
 if __name__ == '__main__':
