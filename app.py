@@ -9,7 +9,8 @@ app = Flask(__name__)
 TELEGRAM_TOKEN = "8072400877:AAEhIU4s8csph7d6NBM5MlZDlfWIAV7ca2o"
 CHAT_ID = "7421725464"
 
-# --- [ مسارات ملفات الأرشفة والـ SEO من داخل مجلد static ] ---
+# --- [ مسارات ملفات SEO والـ PWA من داخل مجلد static ] ---
+
 @app.route('/robots.txt')
 def static_from_root_robots():
     return send_from_directory('static', 'robots.txt')
@@ -21,6 +22,10 @@ def static_from_root_sitemap():
 @app.route('/manifest.json')
 def static_from_root_manifest():
     return send_from_directory('static', 'manifest.json')
+
+@app.route('/sw.js')
+def static_from_root_sw():
+    return send_from_directory('static', 'sw.js')
 
 # --- [ محرك الذكاء الأمني المتقدم ] ---
 BLACKLIST_DB = set()
@@ -69,7 +74,7 @@ def analyze():
             if not violations:
                 violations = [{"name": "Clean Logic", "desc": "تحليل السلوك البرمجي لم يظهر أي أنشطة عدوانية حالياً."}]
     except:
-        score, violations = 45, [{"name": "Analysis Shield", "desc": "الموقع يمنع الفحص الآلي، نوصي بالحذر عند إدخال بياناتك."}]
+        score, violations = 45, [{"name": "Analysis Shield", "desc": "الموقع يمنع الفحص الآلي، نوصي بالحذر عند التعامل معه."}]
 
     # إرسال إشعار تليجرام لطارق
     try:
