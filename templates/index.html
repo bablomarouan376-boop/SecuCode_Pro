@@ -6,22 +6,37 @@
     <title>SecuCode Pro | Elite Cyber Security</title>
     
     <meta name="description" content="SecuCode Pro - نظام طارق مصطفى المتطور لفحص الروابط وكشف البرمجيات الخبيثة بالذكاء الاصطناعي 2026.">
+    <meta name="author" content="Tarek Mostafa">
     <link rel="manifest" href="/manifest.json">
     <meta name="theme-color" content="#020617">
 
-    <meta property="og:title" content="SecuCode Pro | Elite Cyber Security">
-    <meta property="og:image" content="https://secucode-pro.vercel.app/static/og-image.jpg">
+    <meta property="og:type" content="website">
     <meta property="og:url" content="https://secucode-pro.vercel.app/">
+    <meta property="og:title" content="SecuCode Pro | Elite Cyber Security">
+    <meta property="og:description" content="نظام متطور لفحص الروابط والتهديدات السيبرانية وحماية الخصوصية.">
+    <meta property="og:image" content="https://secucode-pro.vercel.app/static/og-image.jpg">
+    <meta property="og:image:secure_url" content="https://secucode-pro.vercel.app/static/og-image.jpg">
+    <meta property="og:image:type" content="image/jpeg">
+    <meta property="og:image:width" content="1000">
+    <meta property="og:image:height" content="982">
 
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="SecuCode Pro | Elite Cyber Security">
+    <meta name="twitter:image" content="https://secucode-pro.vercel.app/static/og-image.jpg">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     
     <style>
-        :root { --accent: #2563eb; --bg: #020617; }
+        :root { --accent: #2563eb; --danger: #ef4444; --bg: #020617; }
         body { font-family: 'Cairo', sans-serif; background-color: var(--bg); color: white; overflow-x: hidden; }
         .bg-glow { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background: radial-gradient(circle at 50% -20%, #1e3a8a 0%, #020617 80%); }
         .glass-card { background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 2rem; transition: all 0.4s ease; }
+        .glass-card:hover { border-color: rgba(37, 99, 235, 0.4); }
         .btn-prime { background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%); transition: 0.3s; }
+        .btn-prime:hover { transform: translateY(-2px); box-shadow: 0 10px 25px rgba(37, 99, 235, 0.4); }
         .scanning-bar { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent, rgba(37, 99, 235, 0.2), transparent); animation: scan-move 2s infinite; }
         @keyframes scan-move { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
         .modal { display: none; position: fixed; inset: 0; z-index: 9999; background: rgba(0, 0, 0, 0.85); backdrop-filter: blur(12px); align-items: center; justify-content: center; }
@@ -32,48 +47,63 @@
     <div class="bg-glow"></div>
     <main class="max-w-5xl mx-auto px-6 py-12">
         <header class="flex flex-col md:flex-row justify-between items-center gap-6 mb-16">
-            <div class="flex items-center gap-5">
-                <img src="/static/og-image.jpg" alt="Logo" class="w-16 h-16 md:w-20 md:h-20 rounded-2xl object-cover border border-blue-500/30 shadow-lg" loading="eager">
+            <div class="flex items-center gap-5 text-center md:text-right">
+                <img src="/static/og-image.jpg" alt="Logo" class="w-16 h-16 md:w-20 md:h-20 rounded-2xl object-cover border border-blue-500/30 shadow-lg shadow-blue-500/20" loading="eager">
                 <div>
                     <h1 class="text-4xl md:text-5xl font-black italic uppercase tracking-tighter">SECUCODE <span class="text-blue-600">PRO</span></h1>
                     <p id="hero-sub" class="text-[10px] font-bold tracking-[0.5em] text-slate-500 uppercase mt-2">نظام طارق مصطفى للذكاء الاصطناعي الأمني</p>
                 </div>
             </div>
-            <button onclick="toggleLang()" id="langBtn" class="glass-card px-8 py-2 text-xs font-black uppercase tracking-widest">English</button>
+            <button onclick="toggleLang()" id="langBtn" class="glass-card px-8 py-2 text-xs font-black uppercase tracking-widest hover:bg-white/5 transition-all">English</button>
         </header>
 
         <div class="grid grid-cols-2 lg:grid-cols-4 gap-6 mb-16">
-            <div class="glass-card p-8"><h3 class="text-[10px] font-black text-slate-500 uppercase mb-2">إجمالي التحليلات</h3><p id="totalScanned" class="text-3xl font-black font-mono">--</p></div>
-            <div class="glass-card p-8"><h3 class="text-[10px] font-black text-slate-500 uppercase mb-2">تهديدات محجوبة</h3><p id="threatsDetected" class="text-3xl font-black text-red-500 font-mono">--</p></div>
-            <div class="glass-card p-8"><h3 class="text-[10px] font-black text-slate-500 uppercase mb-2">مؤشر الدقة</h3><p class="text-3xl font-black text-green-500 font-mono">100%</p></div>
-            <div class="glass-card p-8 border-dashed border-white/10 flex items-center justify-center"><span class="text-[9px] font-black text-purple-400 uppercase italic animate-pulse">Live Sync</span></div>
+            <div class="glass-card p-8">
+                <h3 id="lbl-total" class="text-[10px] font-black text-slate-500 uppercase mb-2">إجمالي التحليلات</h3>
+                <p id="totalScanned" class="text-3xl font-black font-mono">--</p>
+            </div>
+            <div class="glass-card p-8">
+                <h3 id="lbl-threats" class="text-[10px] font-black text-slate-500 uppercase mb-2">تهديدات محجوبة</h3>
+                <p id="threatsDetected" class="text-3xl font-black text-red-500 font-mono">--</p>
+            </div>
+            <div class="glass-card p-8">
+                <h3 id="lbl-acc" class="text-[10px] font-black text-slate-500 uppercase mb-2">مؤشر الدقة</h3>
+                <p class="text-3xl font-black text-green-500 font-mono">100%</p>
+            </div>
+            <div class="glass-card p-8 border-dashed border-white/10 flex items-center justify-center gap-2">
+                <i data-lucide="refresh-cw" class="w-4 h-4 animate-spin text-purple-400"></i>
+                <span class="text-[9px] font-black text-purple-400 uppercase tracking-widest italic animate-pulse">Live Sync</span>
+            </div>
         </div>
 
-        <div class="glass-card p-2 md:p-4 mb-20 relative overflow-hidden">
+        <div class="glass-card p-2 md:p-4 mb-20 relative overflow-hidden shadow-2xl">
             <div id="scanLine" class="hidden scanning-bar"></div>
             <div class="flex flex-col md:flex-row items-center gap-2">
                 <input type="url" id="urlInput" placeholder="أدخل الرابط لبدء الفحص السلوكي الشامل..." class="flex-1 bg-transparent px-6 py-5 outline-none text-lg font-bold">
                 <button onclick="runAnalysis()" id="scanBtn" class="btn-prime w-full md:w-auto px-10 py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-2">
-                    <i data-lucide="activity"></i><span id="scanBtnText">التحليل الفوري</span>
+                    <i data-lucide="activity" class="w-5 h-5"></i>
+                    <span id="scanBtnText">التحليل الفوري</span>
                 </button>
             </div>
         </div>
 
         <div id="resultsArea" class="hidden space-y-8"></div>
 
-        <footer class="mt-32 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[9px] text-slate-700 font-black tracking-[0.5em] uppercase">
+        <footer class="mt-32 pt-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="flex gap-10">
-                <button onclick="openModal('aboutModal')" class="hover:text-blue-500">بروتوكول النظام</button>
+                <button onclick="openModal('aboutModal')" id="btn-about" class="text-[10px] font-black text-slate-500 hover:text-blue-500 uppercase tracking-widest">بروتوكول النظام</button>
             </div>
-            <p>© 2026 SECUCODE PRO • BY TAREK MOSTAFA</p>
+            <p class="text-[9px] text-slate-700 font-black tracking-[0.5em] uppercase">© 2026 SECUCODE PRO • DEVELOPED BY TAREK MOSTAFA</p>
         </footer>
     </main>
 
-    <div id="aboutModal" class="modal"><div class="glass-card p-10 max-w-2xl mx-4 relative">
-        <button onclick="closeModal('aboutModal')" class="absolute top-6 left-6 p-2 hover:rotate-90 transition-all"><i data-lucide="x"></i></button>
-        <h2 class="text-3xl font-black text-blue-500 mb-6 italic">بروتوكول النظام</h2>
-        <p class="text-slate-300 leading-relaxed text-lg">نظام SecuCode Pro هو منصة رصد سيبراني متقدمة صممها المطور طارق مصطفى.</p>
-    </div></div>
+    <div id="aboutModal" class="modal">
+        <div class="glass-card p-10 max-w-2xl w-full mx-4 relative border-blue-500/20">
+            <button onclick="closeModal('aboutModal')" class="absolute top-6 left-6 text-slate-500 hover:text-white transition-all hover:rotate-90 p-2"><i data-lucide="x"></i></button>
+            <h2 class="text-3xl font-black text-blue-500 mb-6 italic">بروتوكول النظام</h2>
+            <p class="text-slate-300 leading-relaxed text-lg">نظام SecuCode Pro هو منصة رصد سيبراني متقدمة صممها المطور طارق مصطفى باستخدام محركات فحص هجينة تعتمد على تحليل الأكواد في الوقت الفعلي.</p>
+        </div>
+    </div>
 
     <script src="https://unpkg.com/lucide@latest"></script>
     <script type="module">
@@ -84,19 +114,23 @@
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // PWA Registration
+        // [PWA] Service Worker Registration
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js').then(() => console.log('PWA Ready'));
+                navigator.serviceWorker.register('/sw.js')
+                    .then(reg => console.log('SecuCode PWA Active'))
+                    .catch(err => console.log('PWA Error', err));
             });
         }
 
+        // Analytics Fetch
         onValue(ref(db, 'stats'), (s) => {
             const d = s.val() || { clicks: 0, threats: 0 };
             document.getElementById('totalScanned').innerText = d.clicks.toLocaleString();
             document.getElementById('threatsDetected').innerText = d.threats.toLocaleString();
         });
 
+        // Main Functionality
         window.runAnalysis = async function() {
             const url = document.getElementById('urlInput').value.trim();
             if(!url) return;
@@ -114,7 +148,7 @@
                 runTransaction(ref(db, 'stats/clicks'), (c) => (c || 0) + 1);
                 if(data.risk_score === 'Critical') runTransaction(ref(db, 'stats/threats'), (t) => (t || 0) + 1);
                 renderUI(data, url);
-            } catch (e) { alert("خطأ في الاتصال"); }
+            } catch (e) { alert("Security Node Offline"); }
             finally { btn.disabled = false; line.classList.add('hidden'); }
         }
 
@@ -122,18 +156,38 @@
             const area = document.getElementById('resultsArea');
             area.classList.remove('hidden');
             const color = data.risk_score === 'Critical' ? '#ef4444' : '#22c55e';
+            const fallbackScreenshot = `https://api.screenshotmachine.com/?key=6f0b4d&url=${originalUrl}&dimension=1024x768`;
+
             area.innerHTML = `
                 <div class="grid lg:grid-cols-2 gap-8 animate-in slide-in-from-bottom-5 duration-500">
-                    <div class="glass-card p-10 border-r-[12px]" style="border-color: ${color}">
-                        <h2 class="text-5xl font-black italic mb-6 uppercase" style="color: ${color}">${data.risk_score === 'Critical' ? 'تهديد حرج' : 'آمن تماماً'}</h2>
-                        <p class="text-slate-400 leading-relaxed text-lg">${data.violations[0].desc}</p>
+                    <div class="glass-card p-10 border-r-[12px] flex flex-col justify-between" style="border-color: ${color}">
+                        <div>
+                            <h2 class="text-5xl font-black italic uppercase mb-6" style="color: ${color}">${data.risk_score === 'Critical' ? 'تهديد حرج' : 'آمن تماماً'}</h2>
+                            <p class="text-slate-400 leading-relaxed text-lg">${data.violations[0].desc}</p>
+                        </div>
+                        <div class="mt-10 pt-6 border-t border-white/5">
+                            <span class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Risk Factor</span>
+                            <p class="text-4xl font-black font-mono" style="color: ${color}">${data.points}%</p>
+                        </div>
                     </div>
-                    <div class="glass-card p-4">
-                        <img src="${data.screenshot}" class="w-full rounded-2xl" onerror="this.src='https://api.screenshotmachine.com/?key=6f0b4d&url=${originalUrl}&dimension=1024x768'">
+                    <div class="glass-card p-4 relative group">
+                        <div class="rounded-2xl overflow-hidden bg-black aspect-video">
+                            <img src="${data.screenshot}" class="w-full h-full object-cover" onerror="this.src='${fallbackScreenshot}'" loading="lazy">
+                        </div>
                     </div>
                 </div>`;
             lucide.createIcons();
             area.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        let isEn = false;
+        window.toggleLang = function() {
+            isEn = !isEn;
+            document.documentElement.dir = isEn ? 'ltr' : 'rtl';
+            document.getElementById('langBtn').innerText = isEn ? 'العربية' : 'English';
+            document.getElementById('hero-sub').innerText = isEn ? 'Tarek Mostafa Security Intelligence' : 'نظام طارق مصطفى للذكاء الاصطناعي الأمني';
+            document.getElementById('scanBtnText').innerText = isEn ? 'EXECUTE SCAN' : 'التحليل الفوري';
+            document.getElementById('urlInput').placeholder = isEn ? 'Input URL for aggressive scan...' : 'أدخل الرابط لبدء الفحص السلوكي الشامل...';
         }
 
         window.openModal = (id) => document.getElementById(id).classList.add('active');
