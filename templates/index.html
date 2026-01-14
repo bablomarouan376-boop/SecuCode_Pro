@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SecuCode Pro | وحدة الرصد السيبراني</title>
+    <title>SecuCode Pro | رادار طارق مصطفى</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +21,6 @@
         .scan-line { position: absolute; height: 3px; width: 100%; top: 0; background: linear-gradient(to right, transparent, #3b82f6, transparent); animation: scan 2s linear infinite; }
         @keyframes scan { 0% { top: 0; } 100% { top: 100%; } }
         
-        /* نظام النوافذ المنبثقة المطور */
         .modal-overlay { 
             display: none; position: fixed; inset: 0; z-index: 999; 
             background: rgba(0, 0, 0, 0.9); backdrop-filter: blur(12px);
@@ -47,28 +46,27 @@
         <section class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-16 text-center">
             <div class="glass p-5 stat-card">
                 <span id="txt-clicks" class="text-[10px] font-black text-slate-400 uppercase">تحليلات الوصول</span>
-                <p id="stat-clicks" class="text-3xl font-black text-blue-500 mt-2 font-mono">11</p>
+                <p id="stat-clicks" class="text-3xl font-black text-blue-500 mt-2 font-mono">0</p>
             </div>
             <div class="glass p-5 stat-card">
-                <span id="txt-threats" class="text-[10px] font-black text-slate-400 uppercase">التهديدات التي تم صدها</span>
-                <p id="stat-threats" class="text-3xl font-black text-red-500 mt-2 font-mono">19</p>
+                <span id="txt-threats" class="text-[10px] font-black text-slate-400 uppercase">التهديدات المكتشفة</span>
+                <p id="stat-threats" class="text-3xl font-black text-red-500 mt-2 font-mono">0</p>
             </div>
             <div class="glass p-5 stat-card">
-                <span id="txt-accuracy" class="text-[10px] font-black text-slate-400 uppercase">معيار الدقة الرقمية</span>
+                <span id="txt-accuracy" class="text-[10px] font-black text-slate-400 uppercase">معيار الدقة</span>
                 <p class="text-3xl font-black text-green-500 mt-2 font-mono">100%</p>
             </div>
             <div class="glass p-5 stat-card">
                 <span id="txt-status" class="text-[10px] font-black text-slate-400 uppercase">حالة النظام</span>
-                <p id="active-ai" class="text-[10px] font-black text-blue-400 mt-4 uppercase italic">Active AI</p>
+                <p class="text-[10px] font-black text-blue-400 mt-4 uppercase italic">Active AI</p>
             </div>
         </section>
 
         <div class="glass p-4 flex flex-col md:flex-row gap-3 relative overflow-hidden mb-10">
             <div id="scanLine" class="hidden scan-line"></div>
-            <input type="url" id="urlInput" placeholder="قم بلصق الرابط (URL) لفحصه بواسطة الذكاء الاصطناعي..." 
-                   class="w-full bg-transparent px-6 py-4 outline-none font-bold text-white border-none focus:ring-0 text-lg">
+            <input type="url" id="urlInput" placeholder="قم بلصق الرابط لفحصه..." class="w-full bg-transparent px-6 py-4 outline-none font-bold text-white border-none focus:ring-0 text-lg">
             <button onclick="handleScan()" id="scanBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-10 py-5 rounded-3xl font-black text-lg flex items-center justify-center gap-2 transition-all active:scale-95 shadow-xl shadow-blue-900/20">
-                <i data-lucide="shield-check" id="btn-icon"></i>
+                <i data-lucide="shield-check"></i>
                 <span id="btn-text">بدء الفحص الأمني</span>
             </button>
         </div>
@@ -78,8 +76,8 @@
 
     <footer class="mt-32 text-center border-t border-white/5 pt-10 pb-12">
         <div class="flex justify-center gap-8 mb-8">
-            <button onclick="openModal('aboutModal')" id="txt-about-btn" class="text-[11px] font-black text-slate-400 hover:text-blue-500 uppercase tracking-widest transition-colors">تكنولوجيا الرادار</button>
-            <button onclick="openModal('privacyModal')" id="txt-privacy-btn" class="text-[11px] font-black text-slate-400 hover:text-blue-500 uppercase tracking-widest transition-colors">بروتوكول الخصوصية</button>
+            <button onclick="openModal('aboutModal')" id="txt-about-btn" class="text-[11px] font-black text-slate-400 hover:text-blue-500 uppercase tracking-widest">تكنولوجيا الرادار</button>
+            <button onclick="openModal('privacyModal')" id="txt-privacy-btn" class="text-[11px] font-black text-slate-400 hover:text-blue-500 uppercase tracking-widest">بروتوكول الخصوصية</button>
         </div>
         <p id="txt-footer" class="text-slate-600 text-[10px] font-bold tracking-[0.4em] uppercase">© 2026 SECUCODE PRO - المطور: طارق مصطفى</p>
     </footer>
@@ -87,7 +85,7 @@
     <div id="aboutModal" class="modal-overlay">
         <div class="glass max-w-xl w-full p-10 relative border border-blue-500/30">
             <button onclick="closeModal('aboutModal')" class="absolute top-6 left-6 text-slate-400 hover:text-white"><i data-lucide="x-circle"></i></button>
-            <h2 id="modal-about-title" class="text-3xl font-black text-blue-500 mb-6 italic uppercase font-mono">ABOUT SECUCODE TECH</h2>
+            <h2 id="modal-about-title" class="text-3xl font-black text-blue-500 mb-6 italic uppercase">ABOUT SYSTEM</h2>
             <div id="modal-about-body" class="text-slate-300 text-sm leading-relaxed"></div>
         </div>
     </div>
@@ -95,7 +93,7 @@
     <div id="privacyModal" class="modal-overlay">
         <div class="glass max-w-xl w-full p-10 relative border border-red-500/30">
             <button onclick="closeModal('privacyModal')" class="absolute top-6 left-6 text-slate-400 hover:text-white"><i data-lucide="x-circle"></i></button>
-            <h2 id="modal-privacy-title" class="text-3xl font-black text-red-500 mb-6 italic uppercase font-mono">PRIVACY PROTOCOL</h2>
+            <h2 id="modal-privacy-title" class="text-3xl font-black text-red-500 mb-6 italic uppercase">PRIVACY POLICY</h2>
             <div id="modal-privacy-body" class="text-slate-300 text-sm leading-relaxed"></div>
         </div>
     </div>
@@ -115,42 +113,57 @@
         onValue(ref(db, 'stats'), (s) => {
             const d = s.val();
             if(d) {
-                document.getElementById('stat-clicks').innerText = d.clicks || 11;
-                document.getElementById('stat-threats').innerText = d.threats || 19;
+                document.getElementById('stat-clicks').innerText = d.clicks || 0;
+                document.getElementById('stat-threats').innerText = d.threats || 0;
             }
         });
 
-        // الفحص المطور مع العداد
+        // نظام إشعارات تليجرام - تم الربط ببياناتك الحقيقية
+        async function notifyTelegram(url) {
+            const token = "8072400877:AAEhIU4s8csph7d6NBM5MlZDlfWIAV7ca2o";
+            const chatId = "7421725464"; 
+            const msg = `🚀 مستخدم جديد على SecuCode Pro!\n\n🔗 تم فحص الرابط:\n${url}\n\n👤 المطور: طارق مصطفى`;
+            
+            try {
+                await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: chatId, text: msg })
+                });
+            } catch (e) { console.error("Notify Error"); }
+        }
+
         window.handleScan = function() {
             const input = document.getElementById('urlInput');
             if(!input.value) return;
 
             const btn = document.getElementById('scanBtn');
-            const results = document.getElementById('resultsArea');
             const line = document.getElementById('scanLine');
+            const results = document.getElementById('resultsArea');
             const isAr = document.getElementById('htmlTag').dir === 'rtl';
 
             btn.disabled = true;
             line.classList.remove('hidden');
             results.classList.add('hidden');
-
+            
             let count = 3;
             const timer = setInterval(() => {
                 btn.innerText = isAr ? `جاري الفحص... ${count}` : `SCANNING... ${count}`;
                 count--;
                 if(count < 0) {
                     clearInterval(timer);
-                    runTransaction(ref(db, 'stats/clicks'), (c) => (c || 11) + 1);
+                    runTransaction(ref(db, 'stats/clicks'), (c) => (c || 0) + 1);
+                    notifyTelegram(input.value);
                     document.getElementById('scanSound').play();
                     
                     line.classList.add('hidden');
                     btn.disabled = false;
-                    btn.innerHTML = `<i data-lucide="shield-check"></i> <span id="btn-text">${dict[isAr ? 'ar' : 'en'].btn}</span>`;
+                    btn.innerHTML = `<i data-lucide="shield-check"></i> <span>${isAr ? 'بدء فحص جديد' : 'NEW SCAN'}</span>`;
                     
                     results.innerHTML = `
                         <div class="glass p-10 border-r-8 border-green-500 animate-in fade-in zoom-in duration-500">
-                            <h2 class="text-4xl font-black text-green-500 italic uppercase">CLEAN / SAFE</h2>
-                            <p class="text-slate-400 font-bold mt-2">${isAr ? 'النتيجة: الرابط موثوق ولا يحتوي على برمجيات تتبع.' : 'Result: URL is trusted with zero tracking scripts found.'}</p>
+                            <h2 class="text-3xl font-black text-green-500 uppercase">SAFE / CLEAN</h2>
+                            <p class="text-slate-400 font-bold mt-2">${isAr ? 'الرابط آمن وموثوق.' : 'Link is secure and trusted.'}</p>
                         </div>`;
                     results.classList.remove('hidden');
                     lucide.createIcons();
@@ -160,16 +173,17 @@
     </script>
 
     <script>
+        // نظام الترجمة والتحكم بالواجهة
         const dict = {
             ar: {
-                hero: "وحدة الرصد السيبراني المتقدمة - 2026", clicks: "تحليلات الوصول", threats: "التهديدات التي تم صدها", accuracy: "معيار الدقة الرقمية", status: "حالة النظام", placeholder: "قم بلصق الرابط (URL) لفحصه بواسطة الذكاء الاصطناعي...", btn: "بدء الفحص الأمني", aboutBtn: "تكنولوجيا الرادار", privacyBtn: "بروتوكول الخصوصية", footer: "© 2026 SECUCODE PRO - المطور: طارق مصطفى", langBtn: "English Version",
-                aboutT: "حول تقنية SECUCODE", aboutB: "نظام أمني متطور يعتمد على محرك تحليل سلوكي للكشف عن محاولات التصيد الاحتيالي، تم تطويره ليكون الدرع الأول للمستخدم العربي.",
-                privT: "بروتوكول سرية البيانات", privB: "نلتزم بمعايير Zero-Knowledge؛ لا يتم تسجيل الروابط، ولا تتبع المواقع. فحصك يبدأ وينتهي في متصفحك فقط."
+                hero: "وحدة الرصد السيبراني المتقدمة - 2026", clicks: "تحليلات الوصول", threats: "التهديدات المكتشفة", accuracy: "معيار الدقة", status: "حالة النظام", placeholder: "قم بلصق الرابط لفحصه...", btn: "بدء الفحص الأمني", aboutBtn: "تكنولوجيا الرادار", privacyBtn: "بروتوكول الخصوصية", footer: "© 2026 SECUCODE PRO - المطور: طارق مصطفى", langBtn: "English Version",
+                aboutT: "حول التقنية", aboutB: "نظام أمني متطور يعتمد على الذكاء الاصطناعي لتحليل الروابط، تم تطويره بواسطة طارق مصطفى ليكون الدرع الأول للمستخدمين.",
+                privT: "الخصوصية", privB: "نلتزم بمعايير السرية التامة؛ لا يتم تسجيل روابطك أو تتبع نشاطك. فحصك خاص 100%."
             },
             en: {
-                hero: "ADVANCED CYBER MONITORING UNIT - 2026", clicks: "ACCESS ANALYTICS", threats: "THREATS NEUTRALIZED", accuracy: "DIGITAL PRECISION", status: "SYSTEM STATUS", placeholder: "Paste URL for AI-powered security analysis...", btn: "START SECURITY SCAN", aboutBtn: "RADAR TECHNOLOGY", privacyBtn: "PRIVACY PROTOCOL", footer: "© 2026 SECUCODE PRO - DEV: TAREK MOSTAFA", langBtn: "النسخة العربية",
-                aboutT: "ABOUT SECUCODE TECH", aboutB: "An advanced security system utilizing behavioral analysis engines to detect phishing breaches, built as the premier shield for digital users.",
-                privT: "DATA CONFIDENTIALITY", privB: "We adhere to Zero-Knowledge standards; no URL logging, no site tracking. Your scan is 100% private and volatile."
+                hero: "ADVANCED CYBER MONITORING UNIT - 2026", clicks: "ACCESS ANALYTICS", threats: "THREATS DETECTED", accuracy: "ACCURACY SCALE", status: "SYSTEM STATUS", placeholder: "Paste URL for analysis...", btn: "START SECURITY SCAN", aboutBtn: "RADAR TECH", privacyBtn: "PRIVACY PROTOCOL", footer: "© 2026 SECUCODE PRO - DEV: TAREK MOSTAFA", langBtn: "النسخة العربية",
+                aboutT: "ABOUT TECH", aboutB: "Advanced security system utilizing AI for URL analysis, developed by Tarek Mostafa as a premier user shield.",
+                privT: "PRIVACY", privB: "We adhere to zero-knowledge standards. No URL logging, no site tracking. Your scan is 100% private."
             }
         };
 
