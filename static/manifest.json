@@ -1,0 +1,6 @@
+{
+  "name": "SecuCode Pro",
+  "short_name": "SecuCode",
+  "icons": [{"src": "/static/og-image.jpg", "sizes": "512x512", "type": "image/jpeg"}],
+  "start_url": "/", "display": "standalone", "theme_color": "#020617"
+}
