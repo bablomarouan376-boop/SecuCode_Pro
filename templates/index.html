@@ -13,6 +13,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/html5-qrcode"></script>
     
     <style>
         :root { --accent: #2563eb; --bg: #020617; }
@@ -26,7 +27,6 @@
         }
         [lang="en"] body { font-family: 'Inter', sans-serif; }
         
-        /* Glassmorphism Design */
         .glass { 
             background: rgba(255, 255, 255, 0.03); 
             backdrop-filter: blur(15px); 
@@ -35,7 +35,6 @@
             border-radius: 24px; 
         }
         
-        /* Animation & Glows */
         .glow-blue { box-shadow: 0 0 30px rgba(37, 99, 235, 0.15); }
         .glow-red { animation: pulse-red 2s infinite; }
         @keyframes pulse-red {
@@ -58,6 +57,10 @@
         }
         .modal.active { display: flex; opacity: 1; }
         
+        /* تصميم مكان الكاميرا */
+        #reader { width: 100% !important; border: none !important; border-radius: 15px; overflow: hidden; }
+        #reader video { border-radius: 15px; }
+
         .shimmer {
             background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
             background-size: 200% 100%;
@@ -65,7 +68,6 @@
         }
         @keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
 
-        /* Custom Scrollbar */
         ::-webkit-scrollbar { width: 6px; }
         ::-webkit-scrollbar-track { background: #020617; }
         ::-webkit-scrollbar-thumb { background: #1e3a8a; border-radius: 10px; }
@@ -112,8 +114,13 @@
             <div class="relative z-10 space-y-5">
                 <label id="txt-input-label" class="block text-xs font-black text-blue-400 mr-2 uppercase tracking-[0.2em]">أدخل الرابط المراد تحليله سلوكياً:</label>
                 <div class="flex flex-col md:flex-row gap-4">
-                    <input type="url" id="urlInput" placeholder="https://example.com" 
-                        class="flex-1 bg-black/40 border border-white/10 p-5 rounded-2xl focus:outline-none focus:border-blue-500 transition-all text-left dir-ltr font-bold text-lg">
+                    <div class="flex-1 flex gap-2">
+                        <input type="url" id="urlInput" placeholder="https://example.com" 
+                            class="flex-1 bg-black/40 border border-white/10 p-5 rounded-2xl focus:outline-none focus:border-blue-500 transition-all text-left dir-ltr font-bold text-lg">
+                        <button onclick="openScanner()" class="bg-white/5 hover:bg-white/10 px-5 rounded-2xl border border-white/10 transition-all">
+                            <i data-lucide="qr-code" class="w-6 h-6 text-blue-400"></i>
+                        </button>
+                    </div>
                     <button onclick="runAnalysis()" id="scanBtn"
                         class="bg-blue-600 hover:bg-blue-700 px-12 py-5 rounded-2xl font-black text-lg flex items-center justify-center gap-3 transition-all active:scale-95">
                         <i data-lucide="zap" class="w-6 h-6"></i>
@@ -133,8 +140,7 @@
             </div>
         </div>
 
-        <div id="resultsArea" class="hidden space-y-8 animate-in zoom-in-95 duration-700">
-            </div>
+        <div id="resultsArea" class="hidden space-y-8 animate-in zoom-in-95 duration-700"></div>
 
         <footer class="mt-20 py-10 border-t border-white/5 flex flex-col md:flex-row justify-between items-center gap-8 text-[10px] text-slate-500 font-black uppercase tracking-[0.2em]">
             <div class="flex gap-10">
@@ -144,6 +150,14 @@
             <p id="txt-copyright">© 2026 SECUCODE PRO • BY TAREK MOSTAFA</p>
         </footer>
     </main>
+
+    <div id="scannerModal" class="modal">
+        <div class="glass p-6 w-full max-w-sm mx-4 relative border-blue-500/30">
+            <h2 class="text-center font-black mb-4 text-blue-400 uppercase tracking-widest text-xs">توجيه الكاميرا نحو الكود</h2>
+            <div id="reader"></div>
+            <button onclick="closeScanner()" class="w-full mt-4 py-3 glass text-red-500 font-black uppercase text-[10px]">إلغاء</button>
+        </div>
+    </div>
 
     <div id="aboutModal" class="modal"><div class="glass p-10 max-w-2xl mx-4 relative border-blue-500/20 shadow-2xl">
         <button onclick="closeModal('aboutModal')" class="absolute top-6 left-6 text-slate-500 hover:text-white transition-colors"><i data-lucide="x"></i></button>
@@ -161,12 +175,10 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
         import { getDatabase, ref, onValue, runTransaction } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-database.js";
 
-        // Firebase Configuration
         const firebaseConfig = { databaseURL: "https://flutter-ai-playground-2de28-default-rtdb.europe-west1.firebasedatabase.app" };
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
 
-        // Internationalization Data
         const i18n = {
             ar: {
                 hero: "نظام طارق مصطفى للذكاء الاصطناعي الأمني",
@@ -201,8 +213,8 @@
         };
 
         let currentLang = 'ar';
+        let html5QrCode;
 
-        // Core Functions
         window.toggleLang = () => {
             currentLang = currentLang === 'ar' ? 'en' : 'ar';
             const d = i18n[currentLang];
@@ -227,14 +239,33 @@
             lucide.createIcons();
         };
 
-        // Firebase Sync
+        // وظائف الكاميرا
+        window.openScanner = async function() {
+            document.getElementById('scannerModal').classList.add('active');
+            html5QrCode = new Html5Qrcode("reader");
+            try {
+                await html5QrCode.start({ facingMode: "environment" }, { fps: 10, qrbox: 250 }, (decodedText) => {
+                    document.getElementById('urlInput').value = decodedText;
+                    closeScanner();
+                    window.runAnalysis();
+                });
+            } catch (err) { alert("الكاميرا غير متاحة"); closeScanner(); }
+        };
+
+        window.closeScanner = () => {
+            if(html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    document.getElementById('scannerModal').classList.remove('active');
+                }).catch(() => document.getElementById('scannerModal').classList.remove('active'));
+            } else { document.getElementById('scannerModal').classList.remove('active'); }
+        };
+
         onValue(ref(db, 'stats'), (s) => {
             const d = s.val() || { clicks: 0, threats: 0 };
             document.getElementById('totalScanned').innerText = d.clicks.toLocaleString();
             document.getElementById('threatsDetected').innerText = d.threats.toLocaleString();
         });
 
-        // Analysis Execution
         window.runAnalysis = async function() {
             const input = document.getElementById('urlInput');
             const url = input.value.trim();
@@ -268,15 +299,10 @@
                     body: JSON.stringify({ link: url })
                 });
                 const data = await res.json();
-                
-                // Update Firebase Stats
                 runTransaction(ref(db, 'stats/clicks'), (c) => (c || 0) + 1);
                 if(data.risk_score === 'Critical') runTransaction(ref(db, 'stats/threats'), (t) => (t || 0) + 1);
-                
                 renderResults(data, url);
-            } catch (e) { 
-                alert(currentLang === 'ar' ? "فشل الاتصال بخادم الرصد الأمني" : "Security Server Connection Failure"); 
-            }
+            } catch (e) { alert("خطأ في الاتصال بالسيرفر"); }
             finally { 
                 loader.classList.add('hidden'); 
                 scanBtn.disabled = false;
@@ -299,52 +325,31 @@
                         <div class="relative z-10">
                             <div class="flex items-center gap-5 mb-8">
                                 <i data-lucide="${isCrit ? 'alert-octagon' : 'shield-check'}" class="w-12 h-12" style="color: ${color}"></i>
-                                <h2 class="text-4xl font-black italic uppercase tracking-tighter" style="color: ${color}">
-                                    ${isCrit ? d.resCrit : d.resSafe}
-                                </h2>
+                                <h2 class="text-4xl font-black italic uppercase tracking-tighter" style="color: ${color}">${isCrit ? d.resCrit : d.resSafe}</h2>
                             </div>
                             <p class="text-slate-200 text-xl leading-relaxed font-bold">${description}</p>
-                            <div class="mt-10 flex flex-wrap gap-3">
-                                <span class="px-4 py-2 glass text-[9px] font-black uppercase text-blue-400 border-blue-500/20">SSL v1.3 Verified</span>
-                                <span class="px-4 py-2 glass text-[9px] font-black uppercase text-blue-400 border-blue-500/20">Behavioral Shield Active</span>
-                            </div>
                         </div>
-
                         <div class="mt-12 pt-8 border-t border-white/10 flex items-end justify-between">
                             <div>
                                 <span class="text-[10px] text-slate-500 uppercase font-black tracking-[0.3em]">${d.risk}</span>
                                 <p class="text-7xl font-black font-mono leading-none mt-1" style="color: ${color}">${data.points}%</p>
                             </div>
-                            <div class="text-right text-[9px] text-slate-600 font-black tracking-widest leading-loose">
-                                SECUCODE AI ENGINE v4.2<br>TAREK MOSTAFA • 2026
-                            </div>
+                            <div class="text-right text-[9px] text-slate-600 font-black tracking-widest leading-loose">SECUCODE AI ENGINE v4.2<br>TAREK MOSTAFA • 2026</div>
                         </div>
                     </div>
-                    
                     <div class="lg:col-span-2 glass p-4 shadow-2xl overflow-hidden group min-h-[350px]">
-                         <p class="text-[9px] font-black text-slate-500 uppercase mb-4 flex items-center gap-2 tracking-widest">
-                            <i data-lucide="camera" class="w-3 h-3"></i> Visual Site Preview:
-                        </p>
-                        <div class="rounded-xl overflow-hidden h-[calc(100%-2rem)]">
+                        <div class="rounded-xl overflow-hidden h-full">
                             <img src="${data.screenshot}" class="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
                                  onerror="this.src='https://s0.wp.com/mshots/v1/${encodeURIComponent(originalUrl)}?w=800&h=600'">
                         </div>
                     </div>
                 </div>`;
-            
             lucide.createIcons();
             area.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Global UI Controls
-        window.openModal = (id) => {
-            const m = document.getElementById(id);
-            m.classList.add('active');
-            lucide.createIcons();
-        };
+        window.openModal = (id) => { document.getElementById(id).classList.add('active'); lucide.createIcons(); };
         window.closeModal = (id) => document.getElementById(id).classList.remove('active');
-        
-        // Init icons on load
         lucide.createIcons();
     </script>
 </body>
